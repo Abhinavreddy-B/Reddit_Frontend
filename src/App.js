@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import NavBar from "./components/NavBar";
 import NotifyPane from "./components/Notify";
+import Profile from "./components/Profile";
 import SignUp from "./components/SignUp";
 import NotifyContext from "./contexts/NotifyContext";
 import UserContext from "./contexts/UserContext";
@@ -14,7 +15,7 @@ function App() {
   const [notification, Notify] = useState();
 
   useEffect(() => {
-    const saved = window.localStorage.getItem('Greddit:token')
+    const saved = JSON.parse(window.localStorage.getItem('Greddit:token'))
     if (saved) {
       setUser(saved)
       ServerMethods.setToken(saved)
@@ -41,7 +42,7 @@ function App() {
             {
               user &&
               <>
-                <Route exact path="/profile" element={<div>Home</div>}></Route>
+                <Route exact path="/profile" element={<Profile></Profile>}></Route>
                 <Route path="*" element={<Navigate replace to='/profile'></Navigate>}></Route>
               </>
             }

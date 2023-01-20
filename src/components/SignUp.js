@@ -10,14 +10,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import NotifyContext from '../contexts/NotifyContext';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
-import { MuiTelInput } from 'mui-tel-input'
 import ServerMethods from '../utils/Communicate';
+import { Grid } from '@mui/material';
 
 const theme = createTheme();
 
 export default function SignIn() {
     const navigate = useNavigate()
-    const {Notify} = React.useContext(NotifyContext)
+    const { Notify } = React.useContext(NotifyContext)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -38,7 +38,7 @@ export default function SignIn() {
                 message: 'Sign Up Successfull, Login to Continue'
             })
             navigate('/login')
-        }catch(e){
+        } catch (e) {
             console.log(e)
             Notify({
                 type: 'error',
@@ -66,23 +66,30 @@ export default function SignIn() {
                         Register
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="First Name"
-                            label="First Name"
-                            name="First Name"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="Last Name"
-                            label="Last Name"
-                            name="Last Name"
-                        />
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="First Name"
+                                    label="First Name"
+                                    name="First Name"
+                                    autoFocus
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="Last Name"
+                                    label="Last Name"
+                                    name="Last Name"
+                                />
+                            </Grid>
+                        </Grid>
                         <TextField
                             margin="normal"
                             required

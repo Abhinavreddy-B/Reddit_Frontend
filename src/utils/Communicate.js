@@ -1,8 +1,6 @@
 import axios from "axios"
 
-const baseUrl = ''
-
-let token = null
+let token = window.localStorage.getItem('Greddit:token') || null
 
 const resetToken = () => {
     token = null
@@ -10,7 +8,6 @@ const resetToken = () => {
 }
 
 const setToken = (user) => {
-    console.log(user)
     if(user === null){
         token = null
         return
@@ -28,13 +25,22 @@ const signUp = async (credentials, type) => {
     return res.data
 }
 
-const GetUserData = async (id) => {
+const GetUserData = async () => {
     const config = {
         headers: {Authorization: token}
     }
-    const res = await axios.get(`/api/users/${id}`,config)
+    const res = await axios.get(`/api/users/`,config)
     return res.data
 }
-const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData}
+
+const UpdateUserData = async (newData) => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.put(`/api/users/`,newData, config)
+    return res.data
+}
+
+const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData}
 
 export default ServerMethods

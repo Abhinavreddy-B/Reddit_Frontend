@@ -11,13 +11,38 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
 import ServerMethods from '../utils/Communicate';
+import NotifyContext from '../contexts/NotifyContext';
+import { Card, CardActions, CardContent, Grid } from '@mui/material';
 
 const theme = createTheme();
+
+const Social = () => {
+    return (
+        <Card
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        >
+            <CardContent sx={{ flexGrow: 1 }}>
+                <Typography gutterBottom variant="h5" component="h2">
+                    Heading
+                </Typography>
+                <Typography>
+                    This is a media card. You can use this section to describe the
+                    content.
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small">View</Button>
+            </CardActions>
+        </Card>
+    )
+}
+
 
 export default function SignIn() {
     const navigate = useNavigate()
 
     const { setUser } = React.useContext(UserContext)
+    const { Notify } = React.useContext(NotifyContext)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -28,18 +53,26 @@ export default function SignIn() {
         };
         try {
             const resp = await ServerMethods.signIn(credentials)
-            window.localStorage.setItem('Greddit:token',resp)
-            console.log(resp)
+            window.localStorage.setItem('Greddit:token', JSON.stringify(resp))
             ServerMethods.setToken(resp)
             setUser(resp)
+            Notify({
+                type: 'success',
+                message: 'Succesfull Login'
+            })
             navigate('/')
-        }catch(e){
+        } catch (e) {
             console.log(e)
+            Notify({
+                type: 'error',
+                message: `${e.response.data.error}`
+            })
         }
-  };
+    };
 
     return (
         <ThemeProvider theme={theme}>
+            Hiiiiiiii
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -93,18 +126,6 @@ export default function SignIn() {
                         >
                             New User? Sign Up
                         </Button>
-                        {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <div onClick={() => navigate('/signup')} href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </button>
-              </Grid>
-            </Grid> */}
                     </Box>
                 </Box>
             </Container>
