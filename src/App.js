@@ -1,24 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import NavBar from "./components/NavBar";
+import NotifyPane from "./components/Notify";
+import SignUp from "./components/SignUp";
+import NotifyContext from "./contexts/NotifyContext";
+import UserContext from "./contexts/UserContext";
+import ServerMethods from "./utils/Communicate";
+
 
 function App() {
+  const [user, setUser] = useState()
+  const [notification, Notify] = useState();
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem('Greddit:token')
+    if (saved) {
+      setUser(saved)
+      ServerMethods.setToken(saved)
+    }
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <NotifyContext.Provider value={{ notification, Notify }}>
+      <UserContext.Provider value={{ user, setUser }}>
+        <BrowserRouter>
+          <NotifyPane></NotifyPane>
+          <NavBar></NavBar>
+          <Routes>
+            {
+              !user &&
+              <>
+                <Route exact path='/login' element={<Login></Login>}></Route>
+                <Route exact path="/signup" element={<SignUp></SignUp>}></Route>
+              </>
+            }
+            {
+              !user &&
+              <Route path='*' element={<Navigate replace to='/login'></Navigate>}></Route>
+            }
+            {
+              user &&
+              <>
+                <Route exact path="/profile" element={<div>Home</div>}></Route>
+                <Route path="*" element={<Navigate replace to='/profile'></Navigate>}></Route>
+              </>
+            }
+          </Routes>
+        </BrowserRouter>
+      </UserContext.Provider>
+    </NotifyContext.Provider>
   );
 }
 
