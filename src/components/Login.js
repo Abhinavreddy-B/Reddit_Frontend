@@ -12,31 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
 import ServerMethods from '../utils/Communicate';
 import NotifyContext from '../contexts/NotifyContext';
-import { Card, CardActions, CardContent, Grid } from '@mui/material';
 
 const theme = createTheme();
-
-const Social = () => {
-    return (
-        <Card
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-        >
-            <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom variant="h5" component="h2">
-                    Heading
-                </Typography>
-                <Typography>
-                    This is a media card. You can use this section to describe the
-                    content.
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button size="small">View</Button>
-            </CardActions>
-        </Card>
-    )
-}
-
 
 export default function SignIn() {
     const navigate = useNavigate()
@@ -72,7 +49,6 @@ export default function SignIn() {
 
     return (
         <ThemeProvider theme={theme}>
-            Hiiiiiiii
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
