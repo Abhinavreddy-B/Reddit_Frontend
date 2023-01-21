@@ -15,7 +15,6 @@ import UserContext from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 import ServerMethods from '../utils/Communicate';
 
-const pages = ['My Sub Greddiits', 'Reported'];
 
 
 function NavBar() {
@@ -24,13 +23,24 @@ function NavBar() {
 
   const settings = [{
     name: 'Profile',
-    action: () => alert('Hi')
-  },{
+    action: () => navigate('/profile')
+  }, {
     name: 'LogOut',
     action: logout
   }];
 
-  function logout(){
+  const pages = [{
+    name: 'My Sub Greddiits',
+    action: () => navigate('/mysubgreddits')
+  },{
+    name: 'All Sub Greddits',
+    action: () => navigate('/subgreddits')
+  },{
+    name: 'Reported',
+    action: () => alert('Hi')
+  }];
+
+  function logout() {
     handleCloseUserMenu()
     window.localStorage.removeItem('Greddit:token')
     setUser(undefined)
@@ -58,7 +68,7 @@ function NavBar() {
 
 
   return (
-    <AppBar position="sticky" sx={{zIndex: '5'}}>
+    <AppBar position="sticky" sx={{ zIndex: '5' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -109,8 +119,8 @@ function NavBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.name} onClick={page.action}>
+                  <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -136,11 +146,11 @@ function NavBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.name}
+                onClick={page.action}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>

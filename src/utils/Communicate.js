@@ -70,18 +70,40 @@ const DeleteFollower = async (id) => {
 }
 
 const DeleteFollowing = async (id) => {
-    console.log("Hello",id)
     const config = {
         headers: {Authorization: token}
     }
     const data = {
         FollowingId: id
     }
-    console.log(data)
     const res = await axios.post(`/api/users/following/remove`,data, config)
     return res
 }
 
-const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing}
+const AddSubGreddit = async (data) => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.post(`/api/subgreddit`,data, config)
+    return res.data
+}
+
+const GetSubGreddits = async () => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.get(`/api/subgreddit`, config)
+    return res.data
+}
+
+const DeleteSubGreddit = async (id) => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.delete(`/api/subgreddit/${id}`,config)
+    return res
+}
+
+const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,AddSubGreddit,GetSubGreddits,DeleteSubGreddit}
 
 export default ServerMethods
