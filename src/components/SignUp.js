@@ -101,7 +101,6 @@ export default function SignIn() {
                                     autoFocus
                                     inputProps={{
                                         onChange: (event) => {
-                                            console.log("Hello")
                                             if (!event.target.value || event.target.value === null || event.target.value === '') {
                                                 setInv1(true)
                                             } else {
@@ -125,7 +124,6 @@ export default function SignIn() {
                                     name="Last Name"
                                     inputProps={{
                                         onChange: (event) => {
-                                            console.log("Hello")
                                             if (!event.target.value || event.target.value === null || event.target.value === '') {
                                                 setInv2(true)
                                             } else {

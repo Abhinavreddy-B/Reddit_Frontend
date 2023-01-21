@@ -45,7 +45,7 @@ const getFollowers = async () => {
     const config = {
         headers: {Authorization: token}
     }
-    const res = await axios.put(`/api/users/followers`, config)
+    const res = await axios.get(`/api/users/followers`, config)
     return res.data
 }
 
@@ -53,10 +53,35 @@ const getFollowing = async () => {
     const config = {
         headers: {Authorization: token}
     }
-    const res = await axios.put(`/api/users/following`, config)
+    const res = await axios.get(`/api/users/following`, config)
     return res.data
 }
 
-const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData}
+const DeleteFollower = async (id) => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const data = {
+        FollowerId: id
+    }
+    console.log(data)
+    const res = await axios.post(`/api/users/followers/remove`,data, config)
+    return res
+}
+
+const DeleteFollowing = async (id) => {
+    console.log("Hello",id)
+    const config = {
+        headers: {Authorization: token}
+    }
+    const data = {
+        FollowingId: id
+    }
+    console.log(data)
+    const res = await axios.post(`/api/users/following/remove`,data, config)
+    return res
+}
+
+const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing}
 
 export default ServerMethods
