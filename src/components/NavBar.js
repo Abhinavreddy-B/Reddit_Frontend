@@ -31,6 +31,7 @@ function NavBar() {
   }];
 
   function logout(){
+    handleCloseUserMenu()
     window.localStorage.removeItem('Greddit:token')
     setUser(undefined)
     ServerMethods.resetToken()

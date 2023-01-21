@@ -41,6 +41,22 @@ const UpdateUserData = async (newData) => {
     return res.data
 }
 
+const getFollowers = async () => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.put(`/api/users/followers`, config)
+    return res.data
+}
+
+const getFollowing = async () => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const res = await axios.put(`/api/users/following`, config)
+    return res.data
+}
+
 const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData}
 
 export default ServerMethods

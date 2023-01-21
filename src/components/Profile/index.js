@@ -6,16 +6,20 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import NotifyContext from '../contexts/NotifyContext';
-import ServerMethods from '../utils/Communicate';
-import { Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
+import NotifyContext from '../../contexts/NotifyContext';
+import ServerMethods from '../../utils/Communicate';
+import { Card, CardActions, CardContent, CircularProgress, Grid, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 // import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const Social = () => {
+// const Followers = () => {
+
+// }
+const Social = ({ userData }) => {
+
     return (
         <>
             <Card
@@ -26,8 +30,7 @@ const Social = () => {
                         Followers
                     </Typography>
                     <Typography>
-                        This is a media card. You can use this section to describe the
-                        content.
+                        {userData.FollowerCount}
                     </Typography>
                 </CardContent>
                 <CardActions>
@@ -35,15 +38,14 @@ const Social = () => {
                 </CardActions>
             </Card>
             <Card
-                sx={{ display: 'flex', flexDirection: 'column',margin: 2 }}
+                sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}
             >
                 <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
                         Following
                     </Typography>
                     <Typography>
-                        This is a media card. You can use this section to describe the
-                        content.
+                        {userData.FollowingCount}
                     </Typography>
                 </CardContent>
                 <CardActions>
@@ -60,7 +62,14 @@ const Profile = () => {
     const [userData, setUserData] = React.useState()
     const { Notify } = React.useContext(NotifyContext)
     const [editable, setEditable] = React.useState(false)
-    // const navigate = useNavigate()
+
+    const [inv1, setInv1] = React.useState(false)
+    const [inv2, setInv2] = React.useState(false)
+    const [inv3, setInv3] = React.useState(false)
+    const [inv4, setInv4] = React.useState(false)
+    const [inv5, setInv5] = React.useState(false)
+
+    const [pinging, setPinging] = React.useState(false)
 
     React.useEffect(() => {
         ServerMethods.GetUserData().then((data) => {
@@ -73,6 +82,7 @@ const Profile = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setPinging(true)
         const data = new FormData(event.currentTarget);
         const credentials = {
             firstName: data.get('First Name'),
@@ -90,12 +100,15 @@ const Profile = () => {
                 type: 'success',
                 message: 'Updates Successfull'
             })
+            setPinging(false)
+            setEditable(false)
         } catch (e) {
             console.log(e)
             Notify({
                 type: 'error',
                 message: `Update Failed, ${e.response.data.error}`
             })
+            setPinging(false)
         }
     };
 
@@ -107,11 +120,11 @@ const Profile = () => {
     return (
         <ThemeProvider theme={theme}>
             <Grid container spacing={4}>
-                <Grid item xs={12} md={5} order={{xs: 2,md: 1}}>
-                    <Social></Social>
+                <Grid item xs={12} md={5} order={{ xs: 2, md: 1 }}>
+                    <Social userData={userData}></Social>
                 </Grid>
 
-                <Grid item xs={12} md={7} order={{xs: 1, md: 2}}>
+                <Grid item xs={12} md={7} order={{ xs: 1, md: 2 }}>
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
                         <Box
@@ -138,6 +151,16 @@ const Profile = () => {
                                             autoFocus
                                             defaultValue={userData.firstName}
                                             disabled={editable === false ? true : false}
+                                            error={inv1}
+                                            inputProps={{
+                                                onChange: (event) => {
+                                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                                        setInv1(true)
+                                                    } else {
+                                                        setInv1(false)
+                                                    }
+                                                },
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -149,6 +172,16 @@ const Profile = () => {
                                             name="Last Name"
                                             defaultValue={userData.lastName}
                                             disabled={editable === false ? true : false}
+                                            error={inv2}
+                                            inputProps={{
+                                                onChange: (event) => {
+                                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                                        setInv2(true)
+                                                    } else {
+                                                        setInv2(false)
+                                                    }
+                                                },
+                                            }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -182,10 +215,19 @@ const Profile = () => {
                                     autoComplete="email"
                                     type='email'
                                     inputProps={{
-                                        inputMode: 'email'
+                                        inputMode: 'email',
+                                        onChange: (event) => {
+                                            if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                                setInv3(true)
+                                            } else {
+                                                setInv3(false)
+                                            }
+                                        },
                                     }}
                                     defaultValue={userData.Email}
                                     disabled={editable === false ? true : false}
+                                    error={inv3}
+
                                 />
                                 <TextField
                                     margin="normal"
@@ -196,6 +238,16 @@ const Profile = () => {
                                     type='number'
                                     defaultValue={userData.Age}
                                     disabled={editable === false ? true : false}
+                                    error={inv4}
+                                    inputProps={{
+                                        onChange: (event) => {
+                                            if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                                setInv4(true)
+                                            } else {
+                                                setInv4(false)
+                                            }
+                                        },
+                                    }}
                                 />
                                 <TextField
                                     margin="normal"
@@ -207,10 +259,19 @@ const Profile = () => {
                                         type: 'tel',
                                         pattern: "[0-9]{5}[0-9]{5}",
                                         title: 'Should be of the format xxxxxxxxxx',
-                                        inputMode: 'tel'
+                                        inputMode: 'tel',
+                                        onChange: (event) => {
+                                            if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                                setInv5(true)
+                                            } else {
+                                                setInv5(false)
+                                            }
+                                        },
                                     }}
                                     defaultValue={userData.ContactNumber}
                                     disabled={editable === false ? true : false}
+                                    error={inv5}
+
                                 />
                                 <Button
                                     sx={{ mt: 3, mb: 2, display: editable === true ? 'none' : 'block' }}
@@ -226,6 +287,7 @@ const Profile = () => {
                                         setEditable(false)
                                         window.location.reload()
                                     }}
+                                    disabled={pinging}
                                 >
                                     Cancel
                                 </Button>
@@ -234,8 +296,13 @@ const Profile = () => {
                                     fullWidth
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2, display: editable === false ? 'none' : 'block' }}
+                                    disabled={inv1 || inv2 || inv3 || inv4 || inv5 || pinging}
                                 >
-                                    Update
+                                    {
+                                        pinging===true ?
+                                            <CircularProgress /> :
+                                            "Update"
+                                    }
                                 </Button>
                             </Box>
                         </Box>

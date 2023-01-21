@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
 import ServerMethods from '../utils/Communicate';
 import NotifyContext from '../contexts/NotifyContext';
+import { CircularProgress } from '@mui/material';
 
 const theme = createTheme();
 
@@ -21,8 +22,17 @@ export default function SignIn() {
     const { setUser } = React.useContext(UserContext)
     const { Notify } = React.useContext(NotifyContext)
 
+    const [inv1, setInv1] = React.useState(true)
+    const [inv2, setInv2] = React.useState(true)
+    const [pinging, setPinging] = React.useState(false)
+    const [touched, setTouched] = React.useState({
+        1: false,
+        2: false,
+    })
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setPinging(true)
         const data = new FormData(event.currentTarget);
         const credentials = {
             userName: data.get('userName'),
@@ -37,6 +47,7 @@ export default function SignIn() {
                 type: 'success',
                 message: 'Succesfull Login'
             })
+            setPinging(false)
             navigate('/')
         } catch (e) {
             console.log(e)
@@ -44,6 +55,7 @@ export default function SignIn() {
                 type: 'error',
                 message: `${e.response.data.error}`
             })
+            setPinging(false)
         }
     };
 
@@ -75,6 +87,20 @@ export default function SignIn() {
                             name="userName"
                             autoComplete="userName"
                             autoFocus
+                            error={touched[1] && inv1}
+                            inputProps={{
+                                onChange: (event) => {
+                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                        setInv1(true)
+                                    } else {
+                                        setInv1(false)
+                                    }
+                                },
+                                onBlur: () => {
+                                    setTouched({...touched,1: true})
+                                }
+                            }}
+
                         />
                         <TextField
                             margin="normal"
@@ -85,14 +111,32 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            error={touched[2] && inv2}
+                            inputProps={{
+                                onChange: (event) => {
+                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                        setInv2(true)
+                                    } else {
+                                        setInv2(false)
+                                    }
+                                },
+                                onBlur: () => {
+                                    setTouched({...touched,2: true})
+                                }
+                            }}
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={inv1 === true || inv2 === true || pinging === true}
                         >
-                            Sign In
+                            {
+                                pinging === true ?
+                                    <CircularProgress /> :
+                                    "Sign In"
+                            }
                         </Button>
                         <Button
                             fullWidth
