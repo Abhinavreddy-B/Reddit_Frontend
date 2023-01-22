@@ -26,11 +26,11 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
 
     const handleTagAdd = () => {
         const newTag = document.getElementById('Tag-Input').value
-        if (!newTag) {
+        document.getElementById('Tag-Input').value = null
+        if (!newTag || Tags.find(t => t===newTag)) {
             return;
         }
         setTags([...Tags, newTag])
-        document.getElementById('Tag-Input').value = null
     }
 
     const handleBannedAdd = () => {
@@ -145,7 +145,6 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                             {/* <InputLabel htmlFor="outlined-adornment-password">Add Tag</InputLabel> */}
                             <OutlinedInput
                                 id="Tag-Input"
-                                components='form'
                                 placeholder='Add Tag'
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -185,7 +184,6 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                         <FormControl sx={{ my: 1 }} variant="outlined" fullWidth>
                             <OutlinedInput
                                 id="Banned-Input"
-                                components='form'
                                 placeholder='Add a Banned Word'
                                 endAdornment={
                                     <InputAdornment position="end">

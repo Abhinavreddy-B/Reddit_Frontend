@@ -11,7 +11,7 @@ import SignUp from "./components/SignUp";
 import NotifyContext from "./contexts/NotifyContext";
 import UserContext from "./contexts/UserContext";
 import ServerMethods from "./utils/Communicate";
-
+import SubGreddits from "./components/SubGreddits"
 
 function App() {
   const [user, setUser] = useState()
@@ -56,6 +56,7 @@ function App() {
                   <>
                     <Route exact path="/profile" element={<Profile></Profile>}></Route>
                     <Route exact path="/mysubgreddits" element={<MySubGreddits />}></Route>
+                    <Route exact path="/subgreddits" element={<SubGreddits />}></Route>
                     <Route exact path="*" element={<Navigate replace to='/profile'></Navigate>}></Route>
                   </>
                 }

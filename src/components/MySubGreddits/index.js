@@ -33,13 +33,13 @@ const MySubGreddits = () => {
     useEffect(() => {
         ServerMethods.GetSubGreddits().then((response) => {
             setData(response)
-            console.log(response)
         })
     }, [])
 
 
     const HandleDelete = async (id) => {
         setPinging(true)
+        console.log("deleting",id)
         try {
             await ServerMethods.DeleteSubGreddit(id)
             setData(data.filter(f => f.id !== id))
@@ -58,7 +58,7 @@ const MySubGreddits = () => {
         }
     }
     return (
-        <Grid container>
+        <Box>
 
             {
                 edit === true ?
@@ -73,7 +73,7 @@ const MySubGreddits = () => {
                         </Fab>
                     </Box>
             }
-            <Grid item xs={12} sx={{ px: 2, height: '90vh' }}>
+            <Box sx={{ px: 2, height: '90vh' }}>
                 <h1>Your SubGreddits:</h1>
                 {
                     data && pinging === false ?
@@ -82,7 +82,7 @@ const MySubGreddits = () => {
                             height: '80%',
                             overflowY: 'scroll',
                         }}>
-                            <Grid container xs={12}>
+                            <Grid container>
                             {
                                 data.map(e => <SubGredditCard HandleDelete={HandleDelete} key={e.id} data={e} />)
                             }
@@ -90,8 +90,8 @@ const MySubGreddits = () => {
                         </Box> :
                         <CircularProgress />
                 }
-            </Grid>
-        </Grid>
+            </Box>
+        </Box>
     )
 };
 

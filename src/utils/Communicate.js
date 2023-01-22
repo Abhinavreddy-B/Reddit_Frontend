@@ -4,46 +4,46 @@ let token = window.localStorage.getItem('Greddit:token') || null
 
 const resetToken = () => {
     token = null
-    return 
+    return
 }
 
 const setToken = (user) => {
-    if(user === null){
+    if (user === null) {
         token = null
         return
     }
     token = `Bearer ${user.token}`
 }
 
-const signIn = async (credentials,type) => {
-    const res = await axios.post(`/api/users/login`,credentials)
+const signIn = async (credentials, type) => {
+    const res = await axios.post(`/api/users/login`, credentials)
     return res.data
 }
 
 const signUp = async (credentials, type) => {
-    const res = await axios.post(`/api/users/signup`,credentials)
+    const res = await axios.post(`/api/users/signup`, credentials)
     return res.data
 }
 
 const GetUserData = async () => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
-    const res = await axios.get(`/api/users/`,config)
+    const res = await axios.get(`/api/users/`, config)
     return res.data
 }
 
 const UpdateUserData = async (newData) => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
-    const res = await axios.put(`/api/users/`,newData, config)
+    const res = await axios.put(`/api/users/`, newData, config)
     return res.data
 }
 
 const getFollowers = async () => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
     const res = await axios.get(`/api/users/followers`, config)
     return res.data
@@ -51,7 +51,7 @@ const getFollowers = async () => {
 
 const getFollowing = async () => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
     const res = await axios.get(`/api/users/following`, config)
     return res.data
@@ -59,38 +59,37 @@ const getFollowing = async () => {
 
 const DeleteFollower = async (id) => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
     const data = {
         FollowerId: id
     }
-    console.log(data)
-    const res = await axios.post(`/api/users/followers/remove`,data, config)
+    const res = await axios.post(`/api/users/followers/remove`, data, config)
     return res
 }
 
 const DeleteFollowing = async (id) => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
     const data = {
         FollowingId: id
     }
-    const res = await axios.post(`/api/users/following/remove`,data, config)
+    const res = await axios.post(`/api/users/following/remove`, data, config)
     return res
 }
 
 const AddSubGreddit = async (data) => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
-    const res = await axios.post(`/api/subgreddit`,data, config)
+    const res = await axios.post(`/api/subgreddit`, data, config)
     return res.data
 }
 
 const GetSubGreddits = async () => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
     const res = await axios.get(`/api/subgreddit`, config)
     return res.data
@@ -98,12 +97,23 @@ const GetSubGreddits = async () => {
 
 const DeleteSubGreddit = async (id) => {
     const config = {
-        headers: {Authorization: token}
+        headers: { Authorization: token }
     }
-    const res = await axios.delete(`/api/subgreddit/${id}`,config)
+    const res = await axios.delete(`/api/subgreddit/${id}`, config)
     return res
 }
 
-const ServerMethods = {resetToken,setToken,  signIn , signUp , GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,AddSubGreddit,GetSubGreddits,DeleteSubGreddit}
+const GetAllSubGreddits = async () => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/subgreddit/all`, config)
+    return res.data
+}
+
+const ServerMethods = {
+    resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
+    AddSubGreddit, GetSubGreddits, DeleteSubGreddit, GetAllSubGreddits
+}
 
 export default ServerMethods
