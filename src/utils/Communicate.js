@@ -87,7 +87,7 @@ const AddSubGreddit = async (data) => {
     return res.data
 }
 
-const GetSubGreddits = async () => {
+const GetOwnedSubGreddits = async () => {
     const config = {
         headers: { Authorization: token }
     }
@@ -111,9 +111,72 @@ const GetAllSubGreddits = async () => {
     return res.data
 }
 
+const GetJoinedSubGreddits = async () => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/users/subgreddits`, config)
+    return res.data
+}
+
+const LeaveSubGreddit = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.delete(`/api/subgreddit/leave/${id}`, config)
+    return res
+}
+
+const GetSingleSubGredditPage = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/subgreddit/${id}`, config)
+    return res.data
+}
+
+const PostUpvote = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/post/${id}/upvote`, config)
+    return res
+}
+
+const PostDownvote = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/post/${id}/downvote`, config)
+    return res
+}
+
+const PostComment = async (id,comment) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const data = {
+        comment
+    }
+    const res = await axios.post(`/api/post/comment/${id}`,data, config)
+    return res.data
+}
+
+const AddPost = async (id,Text) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const data = {
+        Text
+    }
+    const res = await axios.post(`/api/post/${id}`,data,config)
+    return res.data
+}
+
 const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
-    AddSubGreddit, GetSubGreddits, DeleteSubGreddit, GetAllSubGreddits
+    AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits,GetJoinedSubGreddits,LeaveSubGreddit,GetSingleSubGredditPage,
+    PostUpvote,PostDownvote,PostComment,AddPost
 }
 
 export default ServerMethods

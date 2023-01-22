@@ -35,11 +35,11 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
 
     const handleBannedAdd = () => {
         const newWord = document.getElementById('Banned-Input').value
-        if (!newWord) {
+        document.getElementById('Banned-Input').value = null
+        if (!newWord || Banned.find(t => t===newWord)) {
             return;
         }
         setBanned([...Banned, newWord])
-        document.getElementById('Banned-Input').value = null
     }
 
     const handleSubmit = async (event) => {
@@ -176,7 +176,7 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                         </FormControl>
                         <Typography sx={{ display: 'inline-block' }}>Banned Words:</Typography>
                         {
-                            Banned.map((word,index) => <Chip label={word} sx={{ ml: 1 }} variant="outlined"
+                            Banned.map((word,index) => <Chip key={word} label={word} sx={{ ml: 1 }} variant="outlined"
                             onDelete={() => {
                                 setBanned(Banned.filter((f,i) => i!==index))
                             }}></Chip>)

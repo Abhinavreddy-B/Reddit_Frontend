@@ -31,7 +31,7 @@ const MySubGreddits = () => {
     const { Notify } = useContext(NotifyContext)
 
     useEffect(() => {
-        ServerMethods.GetSubGreddits().then((response) => {
+        ServerMethods.GetOwnedSubGreddits().then((response) => {
             setData(response)
         })
     }, [])
@@ -39,7 +39,6 @@ const MySubGreddits = () => {
 
     const HandleDelete = async (id) => {
         setPinging(true)
-        console.log("deleting",id)
         try {
             await ServerMethods.DeleteSubGreddit(id)
             setData(data.filter(f => f.id !== id))

@@ -2,12 +2,14 @@ import { Button, Card, CardActions, CardContent, Chip, Grid, Typography } from '
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SubGredditCard = ({ data, HandleDelete }) => {
+const SubGredditCard = ({ data, UserSubGreddits, handleLeave }) => {
     const navigate = useNavigate()
+
+    const meta = UserSubGreddits.find(f => f.id.id === data.id)
 
     return (
         <Grid item xs={12} md={6}>
-            <Card sx={{margin: 2,boxShadow: 3,borderRadius: 2}}>
+            <Card sx={{ margin: 2, boxShadow: 3, borderRadius: 2 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 25 }} gutterBottom>
                         {data.Name}
@@ -25,15 +27,30 @@ const SubGredditCard = ({ data, HandleDelete }) => {
                         Banned:
                     </Typography>
                     {
-                        data.Banned.map(word => <Chip variant="outlined" label={word} sx={{ ml: 1 }} />)
+                        data.Banned.map(word => <Chip key={word} variant="outlined" label={word} sx={{ ml: 1 }} />)
                     }
                 </CardContent>
-                <CardActions sx={{ display: 'inline-block' }}>
-                    <Button size="small" variant='contained' onClick={() => navigate(`/subgreddit/${data.id}`)}>Open</Button>
-                </CardActions>
-                {/* <CardActions sx={{ display: 'inline-block' }}>
-                    <Button size="small" variant='contained' color='error' onClick={() => HandleDelete(data.id)}>Delete</Button>
-                </CardActions> */}
+                {
+                    meta && meta.role !== 'left' ?
+                        <>
+                            <CardActions sx={{ display: 'inline-block' }}>
+                                <Button size="small" variant='contained' onClick={() => navigate(`/subgreddit/${data.id}`)}>Open</Button>
+                            </CardActions>
+                            <CardActions sx={{ display: 'inline-block' }}>
+                                <Button size="small" variant='contained' color='error' disabled={meta.role === 'mod'} onClick={() => handleLeave(data.id)}>Leave</Button>
+                            </CardActions>
+                        </>
+                        :
+                        <CardActions sx={{ display: 'inline-block' }} onClick={() => {
+                            if (meta && meta.role === 'left') {
+                                alert('You Already Left this Sub Greddit, Do You want to join again?')
+                            } else {
+                                alert('hi')
+                            }
+                        }}>
+                            <Button size="small" variant='contained' color='success'>Join</Button>
+                        </CardActions>
+                }
             </Card>
         </Grid>
     );

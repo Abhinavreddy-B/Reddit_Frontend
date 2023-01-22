@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
+import { Chip, CircularProgress, FormControl, FormControlLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import ServerMethods from '../../utils/Communicate';
@@ -39,15 +39,17 @@ const CreationCmp = (a, b) => {
     }
     return 0
 }
+
 const MySubGreddits = () => {
     const [data, setData] = useState()
     const [pinging, setPinging] = useState(false)
     const [search, setSearch] = useState()
     const [Tags, setTags] = useState([])
-
+    const [UserSubGreddits, setUserSubGredits] = useState()
+    
     useEffect(() => {
+        setPinging(true)
         ServerMethods.GetAllSubGreddits().then((response) => {
-            // console.log(response.slice().sort(NameAscCmp))
             setData(response.slice().sort(NameAscCmp))
             const tagArrays = response.map(e => e.Tags)
             let tags = []
@@ -55,8 +57,23 @@ const MySubGreddits = () => {
                 tags = [...new Set([...tags, ...arr])]
             })
             setTags(tags.map(e => { return { Tag: e, selected: false } }))
+            setPinging(false)
+        })
+        ServerMethods.GetJoinedSubGreddits().then((response) => {
+            setUserSubGredits(response)
         })
     }, [])
+
+    const JoinedCmp = (a, b) => {
+        const f1 = UserSubGreddits.find(p => p.id.id===a.id)
+        const f2 =  UserSubGreddits.find(p => p.id.id===b.id)
+        if(f1 && !f2){
+            return -1
+        }else if(!f1 && f2){
+            return 1
+        }
+        return 0
+    }
 
     const HandleSort = (event) => {
         switch (event.target.value) {
@@ -82,6 +99,24 @@ const MySubGreddits = () => {
         }
     }
 
+    const handleLeave = async (id) => {
+        try{
+            await ServerMethods.LeaveSubGreddit(id)
+            setUserSubGredits(UserSubGreddits.map(f => f.id.id !== id ? f: {...f,role: 'left'}))
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    if(!UserSubGreddits || !data || pinging === true){
+        return (
+            <>
+                <h1>Your SubGreddits:</h1>
+                <CircularProgress />
+            </>
+        )
+    }
+
     const FilteredData = data ? ((search !== undefined && search !== '' && search !== null) ? data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())) : data) : []
 
 
@@ -93,6 +128,8 @@ const MySubGreddits = () => {
         }
         return false;
     }) : FilteredData) : []
+
+    const SortedData = TagFiltered.slice().sort(JoinedCmp)
 
     const ToggleTagSelect = (index) => {
         setTags(Tags.map((e, i) => {
@@ -124,9 +161,9 @@ const MySubGreddits = () => {
     //     }
     // }
     // console.log(Tags.map((tag) => "<Chip key={tag} label={tag} sx={{ ml: 1 }} variant=\"outlined\"></Chip>"))
-
+    
     return (
-        <Box xs={12} sx={{ px: 2, height: '90vh' }}>
+        <Box sx={{ px: 2, height: '90vh' }}>
             <h1>Your SubGreddits:</h1>
             <TextField id="outlined-basic" label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
                 sx={{ mb: 2 }}
@@ -177,9 +214,9 @@ const MySubGreddits = () => {
                         height: '80%',
                         overflowY: 'scroll',
                     }}>
-                        <Grid container xs={12}>
+                        <Grid container>
                             {
-                                TagFiltered.map(e => <SubGredditCard key={e.id} data={e} />)
+                                SortedData.map(e => <SubGredditCard handleLeave={handleLeave} key={e.id} data={e} UserSubGreddits={UserSubGreddits}/>)
                             }
                         </Grid>
                     </Box> :

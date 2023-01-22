@@ -29,7 +29,7 @@ const SubGredditCard = ({ data, HandleDelete }) => {
                         Banned:
                     </Typography>
                     {
-                        data.Banned.map(word => <Chip variant="outlined" label={word} sx={{ ml: 1 }} />)
+                        data.Banned.map(word => <Chip variant="outlined" key={word} label={word} sx={{ ml: 1 }} />)
                     }
                 </CardContent>
                 <CardActions sx={{ display: 'inline-block' }}>
