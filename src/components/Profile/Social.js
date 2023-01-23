@@ -1,26 +1,33 @@
-import { Button, Card, CardActions, CardContent, CircularProgress, ListItem, ListItemButton, ListItemText, Modal, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CircularProgress, Dialog, Grid, ListItem, ListItemButton, ListItemText, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useContext, useEffect, useState } from 'react';
 import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 
 const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: { xs: '80%', md: 500 },
-    maxHeight: '60%',
+    // position: 'absolute',
+    // top: '50%',
+    // left: '50%',
+    // transform: 'translate(-50%, -50%)',
+    // Height: '60%',
     margin: 0,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
+    // border: '2px solid #000',
+    // boxShadow: 24,
     p: 4,
 
     borderRadius: 2,
-    display: 'block',
-    overflowY: "scroll"
+    // width: '100%',
+    minWidth: '33vw',
+    maxWidth: '90vw'
+    // display: 'block',
+    // overflowY: "scroll"
 };
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="right" ref={ref} {...props} />;
+});
 
 const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
     const [data, setData] = useState()
@@ -57,10 +64,12 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
     }
 
     return (
-        <Modal
+        <Dialog
             open={open}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            TransitionComponent={Transition}
+            keepMounted
+            aria-describedby="alert-dialog-slide-description"
+            sx={{minWidth: '60%',maxWidth: '90%'}}
         >
             <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -73,8 +82,8 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
                                 data.map(f => {
                                     return (
                                         <ListItem key={f.id}>
-                                            <ListItemText primary={f.firstName + ' ' + f.lastName} />
-                                            <ListItemButton>
+                                            <ListItemText primary={f.firstName + ' ' + f.lastName} sx={{flexGrow: 1}}/>
+                                            <ListItemButton sx={{flexGrow: 0}}>
                                                 <Button variant="outlined" onClick={() => RemoveFollower(f.id)}>Remove</Button>
                                             </ListItemButton>
                                         </ListItem>
@@ -88,7 +97,7 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
                     <Button variant="contained" onClick={() => setOpen(false)}>Close</Button>
                 </Box>
             </Box>
-        </Modal>
+        </Dialog>
     )
 }
 
@@ -127,10 +136,11 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
     }
 
     return (
-        <Modal
+        <Dialog
             open={open}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            TransitionComponent={Transition}
+            keepMounted
+            aria-describedby="alert-dialog-slide-description"
         >
             <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -158,7 +168,7 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
                     <Button variant="contained" onClick={() => setOpen(false)}>Close</Button>
                 </Box>
             </Box>
-        </Modal>
+        </Dialog>
     )
 }
 
@@ -170,37 +180,37 @@ const Social = ({ userData, setUserData }) => {
     return (
         <>
             <FollowerModal open={open1} setOpen={setOpen1} setUserData={setUserData} userData={userData} />
-            <Card
-                sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}
-            >
-                <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        Followers
-                    </Typography>
-                    <Typography>
-                        {userData.FollowerCount}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" onClick={() => { setOpen1(true) }}>View</Button>
-                </CardActions>
-            </Card>
-            <Card
-                sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}
-            >
-                <FollowingModal open={open2} setOpen={setOpen2} setUserData={setUserData} userData={userData} />
-                <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        Following
-                    </Typography>
-                    <Typography>
-                        {userData.FollowingCount}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" onClick={() => { setOpen2(true) }}>View</Button>
-                </CardActions>
-            </Card>
+            <FollowingModal open={open2} setOpen={setOpen2} setUserData={setUserData} userData={userData} />
+            <Grid container>
+                <Grid item xs={6}>
+                    <Card
+                        sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}
+                    >
+                        <CardContent sx={{ flexGrow: 1 }}>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Followers
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button sx={{ fontSize: 35 }} onClick={() => { setOpen1(true) }}>{userData.FollowerCount}</Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+                <Grid item xs={6}>
+                    <Card
+                        sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}
+                    >
+                        <CardContent sx={{ flexGrow: 1 }}>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Following
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button sx={{ fontSize: 35 }} onClick={() => { setOpen2(true) }}>{userData.FollowingCount}</Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+            </Grid>
         </>
     )
 }

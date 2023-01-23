@@ -21,7 +21,6 @@ const PostForm = ({ data, setData, setEdit }) => {
         setPinging(true)
 
         try {
-            console.log(data.Posts)
             const res = await ServerMethods.AddPost(data.id, document.getElementById('Post-Form').value)
             setData({ ...data, Posts: [...data.Posts,res] })
             setPinging(false)

@@ -7,17 +7,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import NotifyContext from '../contexts/NotifyContext';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
 import ServerMethods from '../utils/Communicate';
 import { Grid } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import RedditIcon from '@mui/icons-material/Reddit';
 
 const theme = createTheme();
 
-export default function SignIn() {
-    const navigate = useNavigate()
+export default function SignUp({ setSignUp }) {
     const { Notify } = React.useContext(NotifyContext)
 
     const [inv1, setInv1] = React.useState(true)
@@ -58,7 +56,7 @@ export default function SignIn() {
                 message: 'Sign Up Successfull, Login to Continue'
             })
             setPinging(false)
-            navigate('/login')
+            setSignUp(false)
         } catch (e) {
             console.log(e)
             Notify({
@@ -82,7 +80,7 @@ export default function SignIn() {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <HowToRegIcon />
+                        <RedditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Register
@@ -108,10 +106,11 @@ export default function SignIn() {
                                             }
                                         },
                                         onBlur: () => {
-                                            setTouched({...touched,1: true})
+                                            setTouched({ ...touched, 1: true })
                                         }
                                     }}
                                     error={touched[1] && inv1}
+                                    helperText={touched[1] && inv1 ? 'First Name is a required field' : ''}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -131,10 +130,11 @@ export default function SignIn() {
                                             }
                                         },
                                         onBlur: () => {
-                                            setTouched({...touched,2: true})
+                                            setTouched({ ...touched, 2: true })
                                         }
                                     }}
                                     error={touched[2] && inv2}
+                                    helperText={touched[2] && inv2 ? 'Last Name is a required field' : ''}
                                 />
                             </Grid>
                         </Grid>
@@ -155,10 +155,11 @@ export default function SignIn() {
                                     }
                                 },
                                 onBlur: () => {
-                                    setTouched({...touched,3: true})
+                                    setTouched({ ...touched, 3: true })
                                 }
                             }}
                             error={touched[3] && inv3}
+                            helperText={touched[3] && inv3 ? 'Username is a required field' : ''}
                         />
                         <TextField
                             margin="normal"
@@ -178,10 +179,11 @@ export default function SignIn() {
                                     }
                                 },
                                 onBlur: () => {
-                                    setTouched({...touched,4: true})
+                                    setTouched({ ...touched, 4: true })
                                 }
                             }}
                             error={touched[4] && inv4}
+                            helperText={touched[4] && inv4 ? 'Password is a required field' : ''}
                         />
                         <TextField
                             margin="normal"
@@ -202,10 +204,11 @@ export default function SignIn() {
                                     }
                                 },
                                 onBlur: () => {
-                                    setTouched({...touched,5: true})
+                                    setTouched({ ...touched, 5: true })
                                 }
                             }}
                             error={touched[5] && inv5}
+                            helperText={touched[5] && inv5 ? 'Email is a required field' : ''}
                         />
                         <TextField
                             margin="normal"
@@ -224,10 +227,11 @@ export default function SignIn() {
                                     }
                                 },
                                 onBlur: () => {
-                                    setTouched({...touched,6: true})
+                                    setTouched({ ...touched, 6: true })
                                 }
                             }}
                             error={touched[6] && inv6}
+                            helperText={touched[6] && inv6 ? 'Age is a required field' : ''}
                         />
                         <TextField
                             margin="normal"
@@ -249,11 +253,11 @@ export default function SignIn() {
                                     }
                                 },
                                 onBlur: () => {
-                                    setTouched({...touched,7: true})
+                                    setTouched({ ...touched, 7: true })
                                 }
                             }}
                             error={touched[7] && inv7}
-                            
+                            helperText={touched[7] && inv7 ? 'Contact number  should be of the form xxxxxxxxxx' : ''}
                         />
                         <Button
                             type="submit"
@@ -274,7 +278,7 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            onClick={() => navigate('/login')}
+                            onClick={() => setSignUp(false)}
                         >
                             Existing User? Sign In
                         </Button>

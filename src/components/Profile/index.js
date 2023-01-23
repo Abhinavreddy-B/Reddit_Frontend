@@ -40,10 +40,10 @@ const Profile = () => {
     return (
         <ThemeProvider theme={theme}>
             <Grid container spacing={4}>
-                <Grid item xs={12} md={9} order={{ xs: 1}}>
+                <Grid item xs={12} md={8} order={{ xs: 1}}>
                     <Details pinging={pinging} setPinging={setPinging} Notify={Notify} userData={userData} setUserData={setUserData}></Details>
                 </Grid>
-                <Grid item xs={12} md={3} order={{ xs: 2}}>
+                <Grid item xs={12} md={4} order={{ xs: 2}}>
                     <Social userData={userData} setUserData={setUserData}></Social>
                 </Grid>
             </Grid>

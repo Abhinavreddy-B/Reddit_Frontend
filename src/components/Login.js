@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -13,6 +12,8 @@ import UserContext from '../contexts/UserContext';
 import ServerMethods from '../utils/Communicate';
 import NotifyContext from '../contexts/NotifyContext';
 import { CircularProgress } from '@mui/material';
+import SignUp from "./SignUp";
+import RedditIcon from '@mui/icons-material/Reddit';
 
 const theme = createTheme();
 
@@ -21,6 +22,7 @@ export default function SignIn() {
 
     const { setUser } = React.useContext(UserContext)
     const { Notify } = React.useContext(NotifyContext)
+    const [signUp,setSignUp] = React.useState(false)
 
     const [inv1, setInv1] = React.useState(true)
     const [inv2, setInv2] = React.useState(true)
@@ -59,6 +61,12 @@ export default function SignIn() {
         }
     };
 
+    if(signUp === true){
+        return (
+            <SignUp setSignUp={setSignUp}/>
+        )
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -72,7 +80,7 @@ export default function SignIn() {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                        <RedditIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
@@ -86,7 +94,6 @@ export default function SignIn() {
                             label="Username"
                             name="userName"
                             autoComplete="userName"
-                            autoFocus
                             error={touched[1] && inv1}
                             inputProps={{
                                 onChange: (event) => {
@@ -100,8 +107,8 @@ export default function SignIn() {
                                     setTouched({...touched,1: true})
                                 }
                             }}
-
-                        />
+                            helperText={touched[1] && inv1 ? 'Username is a required field' : ''}
+                            />
                         <TextField
                             margin="normal"
                             required
@@ -124,7 +131,8 @@ export default function SignIn() {
                                     setTouched({...touched,2: true})
                                 }
                             }}
-                        />
+                            helperText={touched[2] && inv2 ? 'password is a required field' : ''}
+                            />
                         <Button
                             type="submit"
                             fullWidth
@@ -142,7 +150,7 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            onClick={() => navigate('/signup')}
+                            onClick={() => setSignUp(true)}
                         >
                             New User? Sign Up
                         </Button>

@@ -168,7 +168,7 @@ const MySubGreddits = () => {
     // console.log(Tags.map((tag) => "<Chip key={tag} label={tag} sx={{ ml: 1 }} variant=\"outlined\"></Chip>"))
     
     return (
-        <Box sx={{ px: 2, height: '90vh' }}>
+        <Box sx={{ px: 2 }}>
             <h1>Your SubGreddits:</h1>
             <TextField id="outlined-basic" label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
                 sx={{ mb: 2 }}
@@ -216,8 +216,6 @@ const MySubGreddits = () => {
                 data && pinging === false ?
                     <Box sx={{
                         display: 'block',
-                        height: '80%',
-                        overflowY: 'scroll',
                     }}>
                         <Grid container>
                             {

@@ -14,8 +14,11 @@ import { useContext, useState } from 'react';
 import UserContext from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 import ServerMethods from '../utils/Communicate';
-
-
+import AdjustIcon from '@mui/icons-material/Adjust';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 
 function NavBar() {
   const { user, setUser } = useContext(UserContext)
@@ -23,21 +26,26 @@ function NavBar() {
 
   const settings = [{
     name: 'Profile',
-    action: () => navigate('/profile')
+    action: () => {handleCloseUserMenu(); navigate('/profile')},
+    icon: ManageAccountsIcon
   }, {
-    name: 'LogOut',
-    action: logout
+    name: 'Log Out',
+    action: logout,
+    icon: LogoutIcon
   }];
 
   const pages = [{
     name: 'My Sub Greddiits',
-    action: () => navigate('/mysubgreddits')
-  },{
+    action: () => navigate('/mysubgreddits'),
+    icon: AdjustIcon
+  }, {
     name: 'All Sub Greddits',
-    action: () => navigate('/subgreddits')
-  },{
+    action: () => navigate('/subgreddits'),
+    icon: EqualizerIcon
+  }, {
     name: 'Reported',
-    action: () => alert('Hi')
+    action: () => alert('Hi'),
+    icon: AdjustIcon
   }];
 
   function logout() {
@@ -120,7 +128,10 @@ function NavBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={page.action}>
-                  <Typography textAlign="center">{page.name}</Typography>
+                  <Box>
+                    <page.icon />
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </Box>
                 </MenuItem>
               ))}
             </Menu>
@@ -143,14 +154,17 @@ function NavBar() {
           >
             Greddit
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
                 onClick={page.action}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ color: 'white', display: 'block',margin: 0,padding: 0,ml: 2 }}
               >
-                {page.name}
+                <Box>
+                  <page.icon sx={{height: 10}} />
+                  <Typography textAlign="center" sx={{fontSize: 11}}>{page.name}</Typography>
+                </Box>
               </Button>
             ))}
           </Box>
@@ -159,7 +173,9 @@ function NavBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" >
+                    <PersonRoundedIcon />
+                  </Avatar>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -180,7 +196,7 @@ function NavBar() {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting.name} onClick={setting.action}>
-                    <Typography textAlign="center">{setting.name}</Typography>
+                    <Typography textAlign="center"><setting.icon /> {setting.name}</Typography>
                   </MenuItem>
                 ))}
               </Menu>

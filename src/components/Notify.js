@@ -18,7 +18,7 @@ export default function NotifyPane() {
       <Collapse in={notification !== undefined}>
         <Alert
           sx={{ mb: 2 }}
-          severity={(notification && notification.type) || 'error'}
+          severity={(notification && notification.type)}
         >
           {(notification && notification.message) || ''}
         </Alert>
