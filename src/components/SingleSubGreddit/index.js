@@ -71,7 +71,7 @@ const SingleSubGredditPage = () => {
                             <PostForm data={data} setData={setData} setEdit={setEdit} />
                         </Box>
                     </Modal> :
-                    <Box sx={{position: 'fixed',bottom: 20 ,right: 20}}>
+                    <Box sx={{position: 'fixed',bottom: 20 ,right: 20, zIndex: 20}}>
                         <Fab color="primary" aria-label="add" sx={{ bottom: 0, left: 0 }} onClick={() => setEdit(true)}>
                             <AddOutlined />
                         </Fab>
@@ -80,8 +80,8 @@ const SingleSubGredditPage = () => {
             <Grid item xs={12} md={3} sx={{ height: '100%', textAlign: 'center' }}>
                 <img src="/logo.png" style={{ width: '80%' }} alt='lol' />
             </Grid>
-            <Grid item xs={12} md={9} sx={{ height: {md: '85vh'}, padding: 3, overflowY: {md: 'scroll'} }}>
-                <Typography sx={{ fontSize: 25 }} gutterBottom>
+            <Grid item xs={12} md={9} sx={{ height: {md: '85vh'}, mt: 3, overflowY: {md: 'scroll'} }}>
+                <Typography sx={{ fontSize: 25,position: {md: 'sticky'},top: {md: 0},backgroundColor: 'white',display: 'block',zIndex: 10 }} gutterBottom>
                     {data.Name}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">

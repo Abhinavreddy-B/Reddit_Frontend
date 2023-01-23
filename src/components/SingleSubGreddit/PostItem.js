@@ -1,5 +1,5 @@
 import { Button, Collapse, Divider, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
@@ -9,11 +9,16 @@ import ServerMethods from '../../utils/Communicate';
 // import { StarBorder } from '@mui/icons-material';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import NotifyContext from '../../contexts/NotifyContext';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const PostItem = ({ post, setData, data }) => {
 
     const [open, setOpen] = useState(false)
     const [CommentBox, setCommentBox] = useState(false)
+
+    const {Notify} = useContext(NotifyContext)
 
     const Upvote = async () => {
         try {
@@ -30,6 +35,38 @@ const PostItem = ({ post, setData, data }) => {
             setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + 1 }) })
         } catch (e) {
             console.log(e)
+        }
+    }
+
+    const Save = async () => {
+        try{
+            await ServerMethods.SavePost(post.id)
+            Notify({
+                type: 'success',
+                message: 'Saved Succesfully'
+            })
+        }catch(e){
+            console.log(e)
+            Notify({
+                type: 'error',
+                message: 'Couldnt Save Post'
+            })
+        }
+    }
+
+    const FollowOwner = async () => {
+        try{
+            await ServerMethods.FollowPostOwner(post.id)
+            Notify({
+                type: 'success',
+                message: `Following ${post.PostedBy.Name}`
+            })
+        }catch(e){
+            console.log(e)
+            Notify({
+                type: 'error',
+                message: `${e.response.data.error}`
+            })
         }
     }
 
@@ -51,29 +88,39 @@ const PostItem = ({ post, setData, data }) => {
         <>
             <ListItem>
                 <ListItemText
-                    primary={post.Text}
+                    primary={`${post.Text}   (Posted By ${post.PostedBy.Name})`}
                     sx={{ width: '100%' }}
                 />
-                <ListItemButton onClick={Upvote}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                        <ThumbUpOutlinedIcon />
-                        {post.Upvotes}
-                    </Box>
-                </ListItemButton>
-                <ListItemButton onClick={Downvote}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                        <ThumbDownOutlinedIcon />
-                        <div>{post.Downvotes}</div>
-                    </Box>
-                </ListItemButton>
-                <ListItemButton onClick={() => setCommentBox(!CommentBox)}>
-                    <AddCommentOutlinedIcon />
-                </ListItemButton>
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                    <ListItemButton onClick={Upvote}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                            <ThumbUpOutlinedIcon />
+                            {post.Upvotes}
+                        </Box>
+                    </ListItemButton>
+                    <ListItemButton onClick={Downvote}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                            <ThumbDownOutlinedIcon />
+                            <div>{post.Downvotes}</div>
+                        </Box>
+                    </ListItemButton>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                    <ListItemButton onClick={() => Save()}>
+                        <BookmarkAddIcon />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => FollowOwner()}>
+                        <PersonAddIcon />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => setCommentBox(!CommentBox)}>
+                        <AddCommentOutlinedIcon />
+                    </ListItemButton>
+                </Box>
             </ListItem>
             {
                 CommentBox ?
                     <>
-                        <FormControl sx={{ m: 2, ml: 5, width: { md: '50ch', xs: '25ch' } }} variant="standard">
+                        <FormControl sx={{ m: 2, ml: 5, width: { md: '50ch', xs: '80%' } }} variant="standard">
                             <InputLabel htmlFor="standard-adornment-password">New Comment</InputLabel>
                             <Input
                                 id="New-Comment"

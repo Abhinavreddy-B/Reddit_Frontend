@@ -173,10 +173,26 @@ const AddPost = async (id,Text) => {
     return res.data
 }
 
+const SavePost = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/post/${id}/save`, config)
+    return res
+}
+
+const FollowPostOwner = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/post/${id}/followowner`, config)
+    return res
+}
+
 const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits,GetJoinedSubGreddits,LeaveSubGreddit,GetSingleSubGredditPage,
-    PostUpvote,PostDownvote,PostComment,AddPost
+    PostUpvote,PostDownvote,PostComment,AddPost,SavePost,FollowPostOwner
 }
 
 export default ServerMethods
