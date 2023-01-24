@@ -1,14 +1,14 @@
 import { Avatar, Box, Button, CircularProgress, Container, createTheme, CssBaseline, TextField, ThemeProvider, Typography } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import NotifyContext from '../../contexts/NotifyContext';
+// import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 
 const theme = createTheme()
 
 const PostForm = ({ data, setData, setEdit }) => {
 
-    const { Notify } = useContext(NotifyContext)
+    // const { Notify } = useContext(NotifyContext)
 
     const [inv1, setInv1] = useState(true)
     const [touched, setTouched] = useState({
@@ -19,9 +19,10 @@ const PostForm = ({ data, setData, setEdit }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setPinging(true)
-
+        const val = document.getElementById('Post-Form').value;
+        document.getElementById('Post-Form').value = null
         try {
-            const res = await ServerMethods.AddPost(data.id, document.getElementById('Post-Form').value)
+            const res = await ServerMethods.AddPost(data.id, val)
             setData({ ...data, Posts: [...data.Posts,res] })
             setPinging(false)
             setEdit(false)

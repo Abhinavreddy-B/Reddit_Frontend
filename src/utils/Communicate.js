@@ -189,10 +189,61 @@ const FollowPostOwner = async (id) => {
     return res
 }
 
+const SendJoinRequest = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/subgreddit/${id}/join`, config)
+    return res.data
+}
+
+const GetJoinRequests = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/subgreddit/${id}/requests`, config)
+    return res.data
+}
+
+const AcceptJoinRequests = async (SubGredditId,userId) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const data = {
+        SubGredditId,
+        userId
+    }
+
+    const res = await axios.post(`/api/subgreddit/accept`,data, config)
+    return res.data
+}
+
+const RejectJoinRequests = async (SubGredditId,userId) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const data = {
+        SubGredditId,
+        userId
+    }
+
+    const res = await axios.post(`/api/subgreddit/reject`,data, config)
+    return res.data
+}
+
+const GetSubGredditUsers = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/subgreddit/${id}/users`, config)
+    return res.data
+}
+
 const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits,GetJoinedSubGreddits,LeaveSubGreddit,GetSingleSubGredditPage,
-    PostUpvote,PostDownvote,PostComment,AddPost,SavePost,FollowPostOwner
+    PostUpvote,PostDownvote,PostComment,AddPost,SavePost,FollowPostOwner,GetJoinRequests,SendJoinRequest,AcceptJoinRequests,
+    RejectJoinRequests,GetSubGredditUsers
 }
 
 export default ServerMethods

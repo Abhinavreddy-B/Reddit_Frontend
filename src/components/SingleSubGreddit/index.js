@@ -71,7 +71,7 @@ const SingleSubGredditPage = () => {
     }
 
     return (
-        <Grid container sx={{ height: '100%', width: '100%' }}>
+        <Grid container sx={{ height: '90%', width: '100%',px: 3,my:2 }}>
             <Dialog
                 open={edit === true}
                 TransitionComponent={Transition}

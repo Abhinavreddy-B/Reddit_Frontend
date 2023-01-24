@@ -66,6 +66,7 @@ const MySubGreddits = () => {
     }, [])
 
     const JoinedCmp = (a, b) => {
+        console.log(UserSubGreddits)
         const f1 = UserSubGreddits.find(p => p.id.id===a.id)
         const f2 =  UserSubGreddits.find(p => p.id.id===b.id)
         const e1 = f1 && f1.role !== 'left'
@@ -133,7 +134,7 @@ const MySubGreddits = () => {
         return false;
     }) : FilteredData) : []
 
-    const SortedData = TagFiltered.slice().sort(JoinedCmp)
+    const SortedData = UserSubGreddits ? TagFiltered.slice().sort(JoinedCmp) : TagFiltered.slice()
 
     const ToggleTagSelect = (index) => {
         setTags(Tags.map((e, i) => {

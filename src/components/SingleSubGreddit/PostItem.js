@@ -1,10 +1,10 @@
-import { Button, Collapse, Divider, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Divider, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import { Box } from '@mui/system';
-import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import ServerMethods from '../../utils/Communicate';
 // import { StarBorder } from '@mui/icons-material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -15,10 +15,9 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const PostItem = ({ post, setData, data }) => {
 
-    const [open, setOpen] = useState(false)
     const [CommentBox, setCommentBox] = useState(false)
 
-    const {Notify} = useContext(NotifyContext)
+    const { Notify } = useContext(NotifyContext)
 
     const Upvote = async () => {
         try {
@@ -39,13 +38,13 @@ const PostItem = ({ post, setData, data }) => {
     }
 
     const Save = async () => {
-        try{
+        try {
             await ServerMethods.SavePost(post.id)
             Notify({
                 type: 'success',
                 message: 'Saved Succesfully'
             })
-        }catch(e){
+        } catch (e) {
             console.log(e)
             Notify({
                 type: 'error',
@@ -55,13 +54,13 @@ const PostItem = ({ post, setData, data }) => {
     }
 
     const FollowOwner = async () => {
-        try{
+        try {
             await ServerMethods.FollowPostOwner(post.id)
             Notify({
                 type: 'success',
                 message: `Following ${post.PostedBy.Name}`
             })
-        }catch(e){
+        } catch (e) {
             console.log(e)
             Notify({
                 type: 'error',
@@ -84,11 +83,20 @@ const PostItem = ({ post, setData, data }) => {
         }
     }
 
+    let filtered = post.Text
+
+    // console.log(post.Text)
+    // data.Banned.forEach(word => {
+    //     let regex = new RegExp(`\\b${word}\\b`,"gi")
+    //     filtered = filtered.replace(regex,(x) => {return '*'.repeat(x.length)})
+    //     // filtered = filtered.replace(regex,"******")
+    // })
+
     return (
         <>
             <ListItem>
                 <ListItemText
-                    primary={`${post.Text}   (Posted By ${post.PostedBy.Name})`}
+                    primary={`${filtered}   (Posted By ${post.PostedBy.Name})`}
                     sx={{ width: '100%' }}
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
@@ -118,41 +126,41 @@ const PostItem = ({ post, setData, data }) => {
                 </Box>
             </ListItem>
             {
-                CommentBox ?
-                    <>
-                        <FormControl sx={{ m: 2, ml: 5, width: { md: '50ch', xs: '80%' } }} variant="standard">
-                            <InputLabel htmlFor="standard-adornment-password">New Comment</InputLabel>
-                            <Input
-                                id="New-Comment"
-                                endAdornment={
-                                    <>
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                // onClick={handleClickShowPassword}
-                                                onClick={HandleAddComment}
-                                            >
-                                                <DoneIcon color='success' />
-                                            </IconButton>
-                                        </InputAdornment>
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                // onClick={handleClickShowPassword}
-                                                onClick={() => setCommentBox(false)}
-                                            >
-                                                <CloseIcon color='error' />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    </>
-                                }
-                            />
-                        </FormControl>
-                    </>
-                    :
-                    <>
+                CommentBox &&
+                <>
+                    <FormControl sx={{ m: 2, ml: 5, width: { md: '50ch', xs: '80%' } }} variant="standard">
+                        <InputLabel htmlFor="standard-adornment-password">New Comment</InputLabel>
+                        <Input
+                            id="New-Comment"
+                            endAdornment={
+                                <>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            // onClick={handleClickShowPassword}
+                                            onClick={HandleAddComment}
+                                        >
+                                            <DoneIcon color='success' />
+                                        </IconButton>
+                                    </InputAdornment>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            // onClick={handleClickShowPassword}
+                                            onClick={() => setCommentBox(false)}
+                                        >
+                                            <CloseIcon color='error' />
+                                        </IconButton>
+                                    </InputAdornment>
+                                </>
+                            }
+                        />
+                    </FormControl>
+                </>
+            }
+            <>
 
-                        <Box sx={{ pl: '5%', fontWeight: 'bold', fontSize: '22' }} onClick={() => setOpen(!open)}>
+                {/* <Box sx={{ pl: '5%', fontWeight: 'bold', fontSize: '22' }} onClick={() => setOpen(!open)}>
                             <Typography sx={{ display: 'inline-block', fontWeight: 'bold' }} component='h1'>
                                 Comments
                             </Typography>
@@ -166,9 +174,25 @@ const PostItem = ({ post, setData, data }) => {
                                     post.Comments.map(c => <><Divider light /><ListItemText primary={c} /></>)
                                 }
                             </List>
-                        </Collapse>
-                    </>
-            }
+                        </Collapse> */}
+                <Accordion sx={{ width: {lg: '60%',md: '80%',xs: '95%'}, md: 2,pl: 5 }}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMore />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography sx={{fontWeight: 'bold'}}>Comments</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <List component="div" sx={{ pl: '10%' }}>
+                            {
+                                post.Comments.map(c => <><Divider light /><ListItemText primary={c} /></>)
+                            }
+                        </List>
+                    </AccordionDetails>
+                </Accordion>
+            </>
+
             <Divider />
         </>
     );
