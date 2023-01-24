@@ -21,12 +21,27 @@ const PostForm = ({ data, setData, setEdit }) => {
         setPinging(true)
         const val = document.getElementById('Post-Form').value;
         document.getElementById('Post-Form').value = null
-        try {
-            const res = await ServerMethods.AddPost(data.id, val)
-            setData({ ...data, Posts: [...data.Posts,res] })
+        let check = val
+        data.Banned.forEach(word => {
+            let regex = new RegExp(`\\b${word}\\b`, "gi")
+            check = check.replace(regex, (x) => { return '*'.repeat(x.length) })
+            // filtered = filtered.replace(regex,"******")
+        })
+        let flag = true
+        if(check !== val){
+            flag = flag && await window.confirm('Hey! You have banned words in you post, do you want to proceed?')
+        }
+        if(flag === false){
             setPinging(false)
             setEdit(false)
-        }catch(e){
+            return 
+        }
+        try {
+            const res = await ServerMethods.AddPost(data.id, val)
+            setData({ ...data, Posts: [...data.Posts, res] })
+            setPinging(false)
+            setEdit(false)
+        } catch (e) {
             setPinging(false)
             console.log(e)
         }

@@ -170,7 +170,7 @@ const MySubGreddits = () => {
     
     return (
         <Box sx={{ px: 2 }}>
-            <h1>Your SubGreddits:</h1>
+            <h1>All SubGreddits:</h1>
             <TextField id="outlined-basic" label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
                 sx={{ mb: 2 }}
             />

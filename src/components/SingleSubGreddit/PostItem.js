@@ -181,7 +181,7 @@ const PostItem = ({ post, setData, data }) => {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
-                        <Typography sx={{fontWeight: 'bold'}}>Comments</Typography>
+                        <Typography sx={{fontWeight: 'bold'}}>Comments ({post.Comments.length})</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <List component="div" sx={{ pl: '10%' }}>
