@@ -14,6 +14,7 @@ import ServerMethods from "./utils/Communicate";
 import SubGreddits from "./components/SubGreddits"
 import SingleSubGredditPage from "./components/SingleSubGreddit";
 import ManageSubGreddit from "./components/ManageSubGreddit";
+import SavedPostsPage from "./components/Saved";
 
 function App() {
   const [user, setUser] = useState()
@@ -57,6 +58,7 @@ function App() {
                   user &&
                   <>
                     <Route exact path="/profile" element={<Profile></Profile>}></Route>
+                    <Route exact path="/saved" element={<SavedPostsPage />}></Route>
                     <Route exact path="/mysubgreddits" element={<MySubGreddits />}></Route>
                     <Route exact path="/subgreddits" element={<SubGreddits />}></Route>
                     <Route exact path="/subgreddit/:id" element={<SingleSubGredditPage />}></Route>

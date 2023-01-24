@@ -239,11 +239,27 @@ const GetSubGredditUsers = async (id) => {
     return res.data
 }
 
+const GetSavedPosts = async () => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.get(`/api/users/savedposts`, config)
+    return res.data
+}
+
+const RemoveSavedPost = async (id) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+    const res = await axios.delete(`/api/users/savedposts/${id}`, config)
+    return res
+}
+
 const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits,GetJoinedSubGreddits,LeaveSubGreddit,GetSingleSubGredditPage,
     PostUpvote,PostDownvote,PostComment,AddPost,SavePost,FollowPostOwner,GetJoinRequests,SendJoinRequest,AcceptJoinRequests,
-    RejectJoinRequests,GetSubGredditUsers
+    RejectJoinRequests,GetSubGredditUsers,GetSavedPosts,RemoveSavedPost
 }
 
 export default ServerMethods

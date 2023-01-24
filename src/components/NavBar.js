@@ -19,6 +19,7 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 function NavBar() {
   const { user, setUser } = useContext(UserContext)
@@ -46,6 +47,10 @@ function NavBar() {
     name: 'Reported',
     action: () => alert('Hi'),
     icon: AdjustIcon
+  },{
+    name: 'Saved',
+    action: () => navigate('/saved'),
+    icon: BookmarkIcon
   }];
 
   function logout() {

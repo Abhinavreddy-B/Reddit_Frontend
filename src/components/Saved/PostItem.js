@@ -8,11 +8,11 @@ import { ExpandMore } from '@mui/icons-material';
 import ServerMethods from '../../utils/Communicate';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import NotifyContext from '../../contexts/NotifyContext';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 
-const PostItem = ({ post, setData, data }) => {
+const PostItem = ({ post,posts,setPosts }) => {
 
     const [CommentBox, setCommentBox] = useState(false)
 
@@ -21,37 +21,40 @@ const PostItem = ({ post, setData, data }) => {
     const Upvote = async () => {
         try {
             await ServerMethods.PostUpvote(post.id)
-            setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + 1 }) })
+            setPosts(posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + 1 }))
+            // setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + 1 }) })
         } catch (e) {
             console.log(e)
         }
     }
-
+    
     const Downvote = async () => {
         try {
             await ServerMethods.PostDownvote(post.id)
-            setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + 1 }) })
+            setPosts(posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + 1 }))
+            // setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + 1 }) })
         } catch (e) {
             console.log(e)
         }
     }
 
-    const Save = async () => {
+    const UnSave = async () => {
         try {
-            await ServerMethods.SavePost(post.id)
+            await ServerMethods.RemoveSavedPost(post.id)
+            setPosts(posts.filter(p => p.id !== post.id))
             Notify({
                 type: 'success',
-                message: 'Saved Succesfully'
+                message: 'Removed Succesfully'
             })
         } catch (e) {
             console.log(e)
             Notify({
                 type: 'error',
-                message: 'Couldnt Save Post'
+                message: `Couldnt Remove Post, server: ${e.response.data.error}`
             })
         }
     }
-
+    
     const FollowOwner = async () => {
         try {
             await ServerMethods.FollowPostOwner(post.id)
@@ -76,7 +79,8 @@ const PostItem = ({ post, setData, data }) => {
 
         try {
             const newCom = await ServerMethods.PostComment(post.id, val)
-            setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Comments: [...post.Comments, newCom] }) })
+            setPosts(posts.map(f => f.id !== post.id ? f : { ...post, Comments: [...post.Comments, newCom] }))
+            // setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Comments: [...post.Comments, newCom] }) })
         } catch (e) {
             console.log(e)
         }
@@ -105,8 +109,8 @@ const PostItem = ({ post, setData, data }) => {
                     </ListItemButton>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                    <ListItemButton onClick={() => Save()}>
-                        <BookmarkAddIcon />
+                    <ListItemButton onClick={() => UnSave()}>
+                        <BookmarkRemoveIcon />
                     </ListItemButton>
                     <ListItemButton onClick={() => FollowOwner()}>
                         <PersonAddIcon />
