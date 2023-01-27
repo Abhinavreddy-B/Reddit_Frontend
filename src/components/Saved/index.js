@@ -8,7 +8,6 @@ const SavedPostsPage = () => {
 
 
     useEffect(() => {
-        console.log("Hello")
         ServerMethods.GetSavedPosts().then(res => {
             setPosts(res)
         })

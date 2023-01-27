@@ -1,10 +1,9 @@
-import { Avatar, Box, Button, CircularProgress, Container, createTheme, CssBaseline, TextField, ThemeProvider, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Container, CssBaseline, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 // import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 
-const theme = createTheme()
 
 const PostForm = ({ data, setData, setEdit }) => {
 
@@ -48,7 +47,6 @@ const PostForm = ({ data, setData, setEdit }) => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -111,7 +109,6 @@ const PostForm = ({ data, setData, setEdit }) => {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 };
 

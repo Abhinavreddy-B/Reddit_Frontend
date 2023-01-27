@@ -1,5 +1,4 @@
 import { CircularProgress, Divider, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import NotifyContext from '../../contexts/NotifyContext';
@@ -34,8 +33,6 @@ const Users = () => {
             <CircularProgress />
         )
     }
-    console.log(users)
-    console.log(users.filter(f => f.blocked === false))
     return (
         <>
             <Typography fontSize={30} sx={{ width: '100%', textAlign: 'center' }}>Users</Typography>

@@ -14,7 +14,6 @@ const NameAscCmp = (a, b) => {
 }
 
 const NameDescCmp = (a, b) => {
-    console.log(a.Name,b.Name)
     if (a.Name > b.Name) {
         return -1
     } else if (a.Name < b.Name) {
@@ -66,7 +65,6 @@ const MySubGreddits = () => {
     }, [])
 
     const JoinedCmp = (a, b) => {
-        console.log(UserSubGreddits)
         const f1 = UserSubGreddits.find(p => p.id.id===a.id)
         const f2 =  UserSubGreddits.find(p => p.id.id===b.id)
         const e1 = f1 && f1.role !== 'left'
@@ -146,7 +144,6 @@ const MySubGreddits = () => {
         }))
     }
 
-    console.log(SortedData)
     // const HandleDelete = async (id) => {
     //     setPinging(true)
     //     try {

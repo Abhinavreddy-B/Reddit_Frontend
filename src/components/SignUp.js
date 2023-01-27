@@ -6,14 +6,12 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import NotifyContext from '../contexts/NotifyContext';
 import ServerMethods from '../utils/Communicate';
 import { Grid } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import RedditIcon from '@mui/icons-material/Reddit';
 
-const theme = createTheme();
 
 export default function SignUp({ setSignUp }) {
     const { Notify } = React.useContext(NotifyContext)
@@ -68,7 +66,6 @@ export default function SignUp({ setSignUp }) {
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -285,6 +282,5 @@ export default function SignUp({ setSignUp }) {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

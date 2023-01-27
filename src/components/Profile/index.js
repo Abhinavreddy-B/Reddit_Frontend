@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 import Details from './Details';
@@ -7,7 +6,6 @@ import Social from './Social';
 import { CircularProgress, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
-const theme = createTheme();
 
 const Profile = () => {
 
@@ -38,16 +36,16 @@ const Profile = () => {
         )
     }
     return (
-        <ThemeProvider theme={theme}>
+        <Box>
             <Grid container spacing={4}>
-                <Grid item xs={12} md={8} order={{ xs: 1}}>
+                <Grid item xs={12} md={8} order={{ xs: 1 }}>
                     <Details pinging={pinging} setPinging={setPinging} Notify={Notify} userData={userData} setUserData={setUserData}></Details>
                 </Grid>
-                <Grid item xs={12} md={4} order={{ xs: 2}}>
+                <Grid item xs={12} md={4} order={{ xs: 2 }}>
                     <Social userData={userData} setUserData={setUserData}></Social>
                 </Grid>
             </Grid>
-        </ThemeProvider>
+        </Box>
     );
 };
 

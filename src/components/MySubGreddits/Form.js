@@ -1,11 +1,10 @@
-import { Avatar, Box, Button, Chip, CircularProgress, Container, createTheme, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, OutlinedInput, TextField, ThemeProvider, Typography } from '@mui/material';
+import { Avatar, Box, Button, Chip, CircularProgress, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, OutlinedInput, TextField, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import ServerMethods from '../../utils/Communicate';
 import NotifyContext from '../../contexts/NotifyContext';
 
-const theme = createTheme()
 
 const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
 
@@ -73,7 +72,6 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -237,7 +235,6 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 };
 

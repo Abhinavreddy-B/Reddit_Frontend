@@ -20,8 +20,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { DarkMode, LightMode } from '@mui/icons-material';
 
-function NavBar() {
+function NavBar({theme,setTheme}) {
   const { user, setUser } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -43,10 +44,6 @@ function NavBar() {
     name: 'All Sub Greddits',
     action: () => navigate('/subgreddits'),
     icon: EqualizerIcon
-  }, {
-    name: 'Reported',
-    action: () => alert('Hi'),
-    icon: AdjustIcon
   },{
     name: 'Saved',
     action: () => navigate('/saved'),
@@ -59,6 +56,16 @@ function NavBar() {
     setUser(undefined)
     ServerMethods.resetToken()
     navigate('/login')
+  }
+
+  const toggleTheme = () => {
+    if(theme === 'light'){
+      window.localStorage.setItem('Greddit:theme','dark')
+      setTheme('dark')
+    }else{
+      window.localStorage.setItem('Greddit:theme','light')
+      setTheme('light')
+    }
   }
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -82,7 +89,7 @@ function NavBar() {
 
   return (
     <AppBar position="sticky" sx={{ zIndex: '5' }}>
-      <Container maxWidth="xl">
+      <Container >
         <Toolbar disableGutters>
           <Typography
             variant="h6"
@@ -176,6 +183,9 @@ function NavBar() {
           {
             user &&
             <Box sx={{ flexGrow: 0 }}>
+              <Button onClick={toggleTheme}>
+                {theme === 'light' ? <DarkMode sx={{color: 'black'}} /> : <LightMode sx={{color: 'white'}}/>}      
+              </Button>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" >

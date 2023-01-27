@@ -7,6 +7,7 @@ import ReportIcon from '@mui/icons-material/Report';
 import Requests from './Requests';
 import { PeopleRounded } from '@mui/icons-material';
 import Users from './Users';
+import Reports from './Reports';
 
 const ManageSubGreddit = () => {
     const [page, setPage] = useState('Users')
@@ -14,8 +15,8 @@ const ManageSubGreddit = () => {
     return (
         <>
             <Box sx={{ width: '100%', position: 'fixed', bottom:  0, display: 'flex', justifyContent: 'center' }}>
-                <Paper elevation={3} sx={{ width: 'fit-content' }} square={false}>
-                    <BottomNavigation
+                {/* <Paper elevation={5} sx={{ width: 'fit-content' }} square={false}> */}
+                    <BottomNavigation component={Paper} elevation={5}
                         value={page}
                         onChange={(event, newValue) => {
                             setPage(newValue);
@@ -25,9 +26,9 @@ const ManageSubGreddit = () => {
                         <BottomNavigationAction value="Users" label="Users" icon={< PeopleRounded />} />
                         <BottomNavigationAction value="Requests" label="Requests" icon={<LoginIcon />} />
                         <BottomNavigationAction value="Stats" label="Stats" icon={<BarChartIcon />} />
-                        <BottomNavigationAction value="Reported" label="Reported" icon={<ReportIcon />} />
+                        <BottomNavigationAction value="Reports" label="Reported" icon={<ReportIcon />} />
                     </BottomNavigation>
-                </Paper>
+                {/* </Paper> */}
             </Box>
             {
                 
@@ -55,6 +56,9 @@ const ManageSubGreddit = () => {
             }
             {
                 page === 'Requests' && <Requests />
+            }
+            {
+                page === 'Reports' && <Reports />
             }
         </>
     );
