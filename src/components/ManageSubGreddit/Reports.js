@@ -8,23 +8,37 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
 import NotifyContext from '../../contexts/NotifyContext';
 
-const Row = ({ report,Ignore,Block,DeleteReport }) => {
-  const [timer,setTimer] = useState()
-  const {Notify} = useContext(NotifyContext)
+const Row = ({ report, Ignore, Block, DeleteReport }) => {
+  const [timer, setTimer] = useState()
+  const { Notify } = useContext(NotifyContext)
 
   let intervalRef = useRef();
 
-  if(timer !== undefined){
-    if(timer <= 0){
-      Block(report.id)
-      // Block(report.id).then(() => {
-        setTimer(undefined)
-      // })
-    }else{
-      console.log("timer is",timer,"setting to ",timer-1)
-      intervalRef.current = setTimeout(() => {setTimer(timer => timer-1)},1000)
+  // if(timer !== undefined){
+  //   if(timer <= 0){
+  //     Block(report.id)
+  //     // Block(report.id).then(() => {
+  //       setTimer(undefined)
+  //     // })
+  //   }else{
+  //     console.log("timer is",timer,"setting to ",timer-1)
+  //     intervalRef.current = setTimeout(() => {setTimer(timer => timer-1)},1000)
+  //   }
+  // }
+
+  useEffect(() => {
+    if(report.id === undefined || Block === undefined){
+      return
     }
-  }
+    if (timer !== undefined) {
+      if (timer <= 0) {
+        Block(report.id)
+        setTimer(undefined)
+      } else {
+        intervalRef.current = setTimeout(() => { setTimer(timer => timer - 1) }, 1000)
+      }
+    }
+  }, [timer,Block,report])
   // const StartTimer = () => {
   //   intervalRef.current = setInterval(() => {
   //     console.log("Hi",timer)
@@ -57,13 +71,13 @@ const Row = ({ report,Ignore,Block,DeleteReport }) => {
 
   return (
     <TableRow>
-      <TableCell align='left' sx={{flexGrow: 0}}>{report.ReportedBy.firstName} {report.ReportedBy.lastName}</TableCell>
-      <TableCell align="left" sx={{flexGrow: 0}}>{report.ReportedOn.firstName} {report.ReportedOn.lastName}</TableCell>
-      <TableCell sx={{flexGrow: 1/2}}>{report.Concern}</TableCell>
-      <TableCell align="left" sx={{flexGrow: 1/2}}>{report.Post.Text}</TableCell>
-      <TableCell align="center" sx={{flexGrow: 0}}><Button sx={{width: 'fit-content'}} onClick={timer ? AbortBlock : () => {setTimer(3)}} disabled={report.Ignored}>{timer ? `Cancel in ${timer}` : <BlockIcon />}</Button></TableCell>
-      <TableCell align="center" sx={{flexGrow: 0}}><Button sx={{width: 'fit-content'}} onClick={() => DeleteReport(report.id,report.Post.id)}disabled={report.Ignored}><DeleteIcon /></Button></TableCell>
-      <TableCell align="center" sx={{flexGrow: 0}}><Button sx={{width: 'fit-content'}} onClick={() => Ignore(report.id)}><CallMissedOutgoingIcon /></Button></TableCell>
+      <TableCell align='left' sx={{ flexGrow: 0 }}>{report.ReportedBy.firstName} {report.ReportedBy.lastName}</TableCell>
+      <TableCell align="left" sx={{ flexGrow: 0 }}>{report.ReportedOn.firstName} {report.ReportedOn.lastName}</TableCell>
+      <TableCell sx={{ flexGrow: 1 / 2 }}>{report.Concern}</TableCell>
+      <TableCell align="left" sx={{ flexGrow: 1 / 2 }}>{report.Post.Text}</TableCell>
+      <TableCell align="center" sx={{ flexGrow: 0 }}><Button sx={{ width: 'fit-content' }} onClick={timer ? AbortBlock : () => { setTimer(3) }} disabled={report.Ignored}>{timer ? `Cancel in ${timer}` : <BlockIcon />}</Button></TableCell>
+      <TableCell align="center" sx={{ flexGrow: 0 }}><Button sx={{ width: 'fit-content' }} onClick={() => DeleteReport(report.id, report.Post.id)} disabled={report.Ignored}><DeleteIcon /></Button></TableCell>
+      <TableCell align="center" sx={{ flexGrow: 0 }}><Button sx={{ width: 'fit-content' }} onClick={() => Ignore(report.id)}><CallMissedOutgoingIcon /></Button></TableCell>
     </TableRow>
   )
 }
@@ -82,17 +96,17 @@ const Reports = () => {
     })
   }, [SubGredditId])
 
-  const {Notify} = useContext(NotifyContext)
+  const { Notify } = useContext(NotifyContext)
 
   const HandleIgnore = async (id) => {
-    try{
+    try {
       await ServerMethods.IgnoreReport(id)
-      setReports(reports.map(f => f.id === id? {...f,Ignored: true} : f))
+      setReports(reports.map(f => f.id === id ? { ...f, Ignored: true } : f))
       Notify({
         type: 'success',
         message: 'Report Ignored'
       })
-    }catch(e){
+    } catch (e) {
       console.log(e)
       Notify({
         type: 'error',
@@ -100,17 +114,17 @@ const Reports = () => {
       })
     }
   }
-  
+
   const HandleBlock = async (id) => {
     console.log("Blocking")
-    try{
+    try {
       await ServerMethods.BlockReport(id)
       // setReports(reports.map(f => f.id === id? {...f,Ignored: true} : f))
       Notify({
         type: 'success',
         message: 'Blocked User'
       })
-    }catch(e){
+    } catch (e) {
       console.log(e)
       Notify({
         type: 'error',
@@ -118,9 +132,9 @@ const Reports = () => {
       })
     }
   }
-  
-  const HandleDelete = async (id,PostId) => {
-    try{
+
+  const HandleDelete = async (id, PostId) => {
+    try {
       await ServerMethods.DeleteReport(id)
       console.log(PostId)
       setReports(reports.filter(f => f.Post.id !== PostId))
@@ -128,7 +142,7 @@ const Reports = () => {
         type: 'success',
         message: 'Deleted Post'
       })
-    }catch(e){
+    } catch (e) {
       console.log(e)
       Notify({
         type: 'error',
@@ -143,23 +157,23 @@ const Reports = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex',mt: 4, flexDirection: 'row', justifyContent: 'center' }}>
-      <TableContainer component={Paper} sx={{ width: {md: '70%',xs: '95%'},maxHeight: '75vh' }} elevation={5}>
+    <Box sx={{ display: 'flex', mt: 4, flexDirection: 'row', justifyContent: 'center' }}>
+      <TableContainer component={Paper} sx={{ width: { md: '70%', xs: '95%' }, maxHeight: '75vh' }} elevation={5}>
         <Table aria-label="collapsible table" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align='left' sx={{flexGrow: 0}}>Reported By</TableCell>
-              <TableCell align="left" sx={{flexGrow: 0}}>Abuser</TableCell>
-              <TableCell sx={{flexGrow: 1/2}}>Concern</TableCell>
-              <TableCell align="left" sx={{flexGrow: 1/2}}>Post</TableCell>
-              <TableCell align="center" sx={{flexGrow: 0}}>Block</TableCell>
-              <TableCell align="center" sx={{flexGrow: 0}}>Delete</TableCell>
-              <TableCell align="center" sx={{flexGrow: 0}}>Ignore</TableCell>
+              <TableCell align='left' sx={{ flexGrow: 0 }}>Reported By</TableCell>
+              <TableCell align="left" sx={{ flexGrow: 0 }}>Abuser</TableCell>
+              <TableCell sx={{ flexGrow: 1 / 2 }}>Concern</TableCell>
+              <TableCell align="left" sx={{ flexGrow: 1 / 2 }}>Post</TableCell>
+              <TableCell align="center" sx={{ flexGrow: 0 }}>Block</TableCell>
+              <TableCell align="center" sx={{ flexGrow: 0 }}>Delete</TableCell>
+              <TableCell align="center" sx={{ flexGrow: 0 }}>Ignore</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {reports.map((row) => (
-              <Row key={row.id} report={row} Ignore={HandleIgnore} Block={HandleBlock} DeleteReport={HandleDelete}/>
+              <Row key={row.id} report={row} Ignore={HandleIgnore} Block={HandleBlock} DeleteReport={HandleDelete} />
             ))}
           </TableBody>
         </Table>

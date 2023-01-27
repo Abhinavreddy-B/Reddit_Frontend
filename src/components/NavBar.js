@@ -189,7 +189,8 @@ function NavBar({theme,setTheme}) {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" >
-                    <PersonRoundedIcon />
+                    {/* <PersonRoundedIcon /> */}
+                    {user.Name[0]}
                   </Avatar>
                 </IconButton>
               </Tooltip>

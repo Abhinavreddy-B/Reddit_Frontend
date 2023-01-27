@@ -1,13 +1,13 @@
 import { Avatar, Box, Button, CircularProgress, Container, CssBaseline, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-// import NotifyContext from '../../contexts/NotifyContext';
+import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 
 
 const PostForm = ({ data, setData, setEdit }) => {
 
-    // const { Notify } = useContext(NotifyContext)
+    const { Notify } = useContext(NotifyContext)
 
     const [inv1, setInv1] = useState(true)
     const [touched, setTouched] = useState({
@@ -42,6 +42,11 @@ const PostForm = ({ data, setData, setEdit }) => {
             setEdit(false)
         } catch (e) {
             setPinging(false)
+                Notify({
+                    type: 'error',
+                    message: e.response.data.error
+                })
+            
             console.log(e)
         }
     }
