@@ -1,4 +1,4 @@
-import { CircularProgress, Divider, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Chip, CircularProgress, Divider, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import NotifyContext from '../../contexts/NotifyContext';
@@ -46,7 +46,22 @@ const Users = () => {
                                     <>
                                         <ListItem key={r.ref.id + 'list'}>
                                             <ListItemText sx={{ flexGrow: 1 }}>
-                                                {r.ref.firstName} {r.ref.lastName}
+                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Not Banned' color='success'></Chip>
+                                            </ListItemText>
+                                        </ListItem>
+                                        <Divider key={r.ref.id + 'divider'} />
+                                    </>
+                                )
+                            }
+                            )
+                        }
+                        {
+                            users.filter(f => f.blocked === true).map(r => {
+                                return (
+                                    <>
+                                        <ListItem key={r.ref.id + 'list'}>
+                                            <ListItemText sx={{ flexGrow: 1 }}>
+                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Banned' color='error'></Chip>
                                             </ListItemText>
                                         </ListItem>
                                         <Divider key={r.ref.id + 'divider'} />
@@ -57,7 +72,7 @@ const Users = () => {
                         }
                     </List>
                 </Grid>
-                <Grid item md={6} xs={12}>
+                {/* <Grid item md={6} xs={12}>
                     <Typography fontSize={30} sx={{ width: '100%', textAlign: 'center' }}>Blocked</Typography>
                     <List sx={{ display: 'block', height: { md: '60vh' }, overflowY: { md: 'scroll' } }}>
                         {
@@ -76,7 +91,7 @@ const Users = () => {
                             )
                         }
                     </List>
-                </Grid>
+                    </Grid>*/}
             </Grid>
         </>
     );

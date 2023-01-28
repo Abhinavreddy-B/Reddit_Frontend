@@ -9,7 +9,7 @@ const SavedPostsPage = () => {
 
     useEffect(() => {
         ServerMethods.GetSavedPosts().then(res => {
-            setPosts(res)
+            setPosts(res.map(e => {return {...(e.Post),SubGreddit: e.SubGreddit}}))
         })
     }, [])
 
