@@ -18,7 +18,6 @@ import AdjustIcon from '@mui/icons-material/Adjust';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { DarkMode, LightMode } from '@mui/icons-material';
 
