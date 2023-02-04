@@ -37,7 +37,7 @@ export default function NotifyPane() {
     //   <Collapse in={notification !== undefined}>
     <Snackbar open={notification !== undefined} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
       TransitionComponent={SlideTransition}
-    autoHideDuration={3000} onClose={handleClose}>
+    autoHideDuration={1500} onClose={handleClose}>
       <Alert
         severity={(temp && temp.type)}
         color={(temp && temp.type)}

@@ -214,12 +214,32 @@ const DeleteReport = async (id) => {
     return res
 }
 
+const GetStatsGrowth = async (id) => {
+    const res = await axios.get(`${BaseUrl}/api/stats/${id}/growth`, config())
+    return res.data
+}
+
+const GetPostVsDate = async (id) => {
+    const res = await axios.get(`${BaseUrl}/api/stats/${id}/postsvsdate`, config())
+    return res.data
+}
+
+const GetVisitorsVsDate = async (id) => {
+    const res = await axios.get(`${BaseUrl}/api/stats/${id}/visitorsvsdate`, config())
+    return res.data
+}
+
+const GetReporedVsDeleted = async (id) => {
+    const res = await axios.get(`${BaseUrl}/api/stats/${id}/reportedvsdeleted`, config())
+    return res.data
+}
+
 const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits, GetJoinedSubGreddits, LeaveSubGreddit, GetSingleSubGredditPage,
     PostUpvote, PostDownvote, PostComment, AddPost, SavePost, FollowPostOwner, GetJoinRequests, SendJoinRequest, AcceptJoinRequests,
     RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport,IgnoreReport,
-    BlockReport,DeleteReport
+    BlockReport,DeleteReport,GetStatsGrowth,GetPostVsDate,GetVisitorsVsDate,GetReporedVsDeleted
 }
 
 export default ServerMethods

@@ -71,7 +71,7 @@ const MySubGreddits = () => {
                 aria-describedby="alert-dialog-slide-description"
             >
                 <Box sx={style}>
-                    <CreateSubGredditsForm data={data} setData={setData} setEdit={setEdit} />
+                    <CreateSubGredditsForm data={data} setData={setData} setEdit={setEdit} edit={edit}/>
                 </Box>
             </Dialog>
             {

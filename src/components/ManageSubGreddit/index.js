@@ -8,6 +8,7 @@ import Requests from './Requests';
 import { PeopleRounded } from '@mui/icons-material';
 import Users from './Users';
 import Reports from './Reports';
+import Stats from './Stats';
 
 const ManageSubGreddit = () => {
     const [page, setPage] = useState('Users')
@@ -56,6 +57,9 @@ const ManageSubGreddit = () => {
             }
             {
                 page === 'Requests' && <Requests />
+            }
+            {
+                page === 'Stats' && <Stats />
             }
             {
                 page === 'Reports' && <Reports />

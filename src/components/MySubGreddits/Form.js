@@ -6,7 +6,7 @@ import ServerMethods from '../../utils/Communicate';
 import NotifyContext from '../../contexts/NotifyContext';
 
 
-const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
+const CreateSubGredditsForm = ({ data, setData, setEdit,edit }) => {
 
     const { Notify } = useContext(NotifyContext)
 
@@ -51,6 +51,7 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
             Tags,
             Banned
         };
+        
         try {
             const response = await ServerMethods.AddSubGreddit(newSubGreddit)
             setData([...data, response])
@@ -70,7 +71,6 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
             setEdit(false)
         }
     }
-
     return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -152,7 +152,7 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                                             sx={{ color: inv3 === true ? 'grey' : 'black' }}
                                             disabled={inv3}
                                         >
-                                            <AddBoxIcon />
+                                            <AddBoxIcon color='primary'/>
                                         </IconButton>
                                     </InputAdornment>
                                 }
@@ -191,7 +191,7 @@ const CreateSubGredditsForm = ({ data, setData, setEdit }) => {
                                             sx={{ color: inv4 === true ? 'grey' : 'black' }}
                                             disabled={inv4}
                                         >
-                                            <AddBoxIcon />
+                                            <AddBoxIcon color='primary'/>
                                         </IconButton>
                                     </InputAdornment>
                                 }

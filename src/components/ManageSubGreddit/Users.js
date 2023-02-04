@@ -37,8 +37,7 @@ const Users = () => {
         <>
             <Typography fontSize={30} sx={{ width: '100%', textAlign: 'center' }}>Users</Typography>
             <Grid container>
-                <Grid item md={6} xs={12}>
-                    <Typography fontSize={30} sx={{ width: '100%', textAlign: 'center' }}>Not Blocked</Typography>
+                <Grid item xs={12}>
                     <List sx={{ display: 'block', height: { md: '60vh' }, overflowY: { md: 'scroll' } }}>
                         {
                             users.filter(f => f.blocked === false).map(r => {
@@ -46,7 +45,7 @@ const Users = () => {
                                     <>
                                         <ListItem key={r.ref.id + 'list'}>
                                             <ListItemText sx={{ flexGrow: 1 }}>
-                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Not Banned' color='success'></Chip>
+                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Not Blocked' color='success'></Chip>
                                             </ListItemText>
                                         </ListItem>
                                         <Divider key={r.ref.id + 'divider'} />
@@ -61,7 +60,7 @@ const Users = () => {
                                     <>
                                         <ListItem key={r.ref.id + 'list'}>
                                             <ListItemText sx={{ flexGrow: 1 }}>
-                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Banned' color='error'></Chip>
+                                                {r.ref.firstName} {r.ref.lastName} <Chip label='Blocked' color='error'></Chip>
                                             </ListItemText>
                                         </ListItem>
                                         <Divider key={r.ref.id + 'divider'} />

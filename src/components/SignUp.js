@@ -243,7 +243,7 @@ export default function SignUp({ setSignUp }) {
                                 title: 'Should be of the format xxxxxxxxxx',
                                 inputMode: 'tel',
                                 onChange: (event) => {
-                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                    if (!event.target.value || event.target.value === null || event.target.value === '' || /^[0-9]{10}$/.test(event.target.value) === false) {
                                         setInv7(true)
                                     } else {
                                         setInv7(false)
