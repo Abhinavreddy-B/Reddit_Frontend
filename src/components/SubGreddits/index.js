@@ -1,8 +1,9 @@
-import { Chip, CircularProgress, FormControl, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Chip, CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, Radio, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import ServerMethods from '../../utils/Communicate';
 import SubGredditCard from './SubGredditCard';
+import Fuse from 'fuse.js'
 
 const NameAscCmp = (a, b) => {
     if (a.Name < b.Name) {
@@ -46,7 +47,8 @@ const MySubGreddits = () => {
     const [search, setSearch] = useState()
     const [Tags, setTags] = useState([])
     const [UserSubGreddits, setUserSubGredits] = useState()
-    
+    const [fuzzy, setFuzzy] = useState(false)
+
     useEffect(() => {
         setPinging(true)
         ServerMethods.GetAllSubGreddits().then((response) => {
@@ -65,14 +67,22 @@ const MySubGreddits = () => {
     }, [])
 
     const JoinedCmp = (a, b) => {
-        const f1 = UserSubGreddits.find(p => p.id.id===a.id)
-        const f2 =  UserSubGreddits.find(p => p.id.id===b.id)
+        const f1 = UserSubGreddits.find(p => p.id.id === a.id)
+        const f2 = UserSubGreddits.find(p => p.id.id === b.id)
         const e1 = f1 && f1.role !== 'left'
         const e2 = f2 && f2.role !== 'left'
 
-        if(e1 && !e2){
+        if (e1 && !e2) {
             return -1
-        }else if(!e1 && e2){
+        } else if (!e1 && e2) {
+            return 1
+        }
+        return 0
+    }
+    const FuzzyCmp = (a, b) => {
+        if (a.refIndex < b.refIndex) {
+            return -1
+        } else if (a.refIndex > b.refIndex) {
             return 1
         }
         return 0
@@ -103,15 +113,15 @@ const MySubGreddits = () => {
     }
 
     const handleLeave = async (id) => {
-        try{
+        try {
             await ServerMethods.LeaveSubGreddit(id)
-            setUserSubGredits(UserSubGreddits.map(f => f.id.id !== id ? f: {...f,role: 'left'}))
-        }catch(e){
+            setUserSubGredits(UserSubGreddits.map(f => f.id.id !== id ? f : { ...f, role: 'left' }))
+        } catch (e) {
             console.log(e)
         }
     }
 
-    if(!UserSubGreddits || !data || pinging === true){
+    if (!UserSubGreddits || !data || pinging === true) {
         return (
             <>
                 <h1>Your SubGreddits:</h1>
@@ -120,19 +130,34 @@ const MySubGreddits = () => {
         )
     }
 
-    const FilteredData = data ? ((search !== undefined && search !== '' && search !== null) ? data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())) : data) : []
+    if (!data) {
+        return (
+            <Box>
+                <h1>All SubGreddits:</h1>
+                <CircularProgress />
+            </Box>
+        )
+    }
+    // const FilteredData = data ? ((search !== undefined && search !== '' && search !== null) ? data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())) : data) : []
+    const fuse = new Fuse(data, {
+        keys: ['Name']
+    })
 
+    const FilteredData = (search !== undefined && search !== '' && search !== null) ? (fuzzy? fuse.search(search) : data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())).map(f => {return {item: f,refIndex: 1}})) : data.map(f => { return { item: f, refIndex: 1 } })
 
     const TagFiltered = FilteredData ? (Tags.filter(t => t.selected === true).length > 0 ? FilteredData.filter(fdat => {
         for (let i = 0; i < Tags.length; i++) {
-            if (Tags[i].selected === true && fdat.Tags.find(val => val === Tags[i].Tag)) {
+            if (Tags[i].selected === true && fdat.item.Tags.find(val => val === Tags[i].Tag)) {
                 return true;
             }
         }
         return false;
     }) : FilteredData) : []
-
-    const SortedData = UserSubGreddits ? TagFiltered.slice().sort(JoinedCmp) : TagFiltered.slice()
+    
+    console.log("Hi", TagFiltered)
+    const FuzzyData = TagFiltered.slice().sort(FuzzyCmp).map(f => f.item)
+    const SortedData = UserSubGreddits ? FuzzyData.slice().sort(JoinedCmp) : TagFiltered.slice()
+    
 
     const ToggleTagSelect = (index) => {
         setTags(Tags.map((e, i) => {
@@ -164,36 +189,40 @@ const MySubGreddits = () => {
     //     }
     // }
     // console.log(Tags.map((tag) => "<Chip key={tag} label={tag} sx={{ ml: 1 }} variant=\"outlined\"></Chip>"))
-    
+
     return (
         <Box sx={{ px: 2 }}>
             <h1>All SubGreddits:</h1>
-            <TextField id="outlined-basic" sx={{width: {md:'40%',xs: '95%'},mb: 2}} label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
-                
+            <FormGroup onChange={() => setFuzzy(!fuzzy)}>
+                <FormControlLabel control={<Switch />} label="Fuzzy Search" />
+            </FormGroup>
+            <br></br>
+            <TextField id="outlined-basic" sx={{ width: { md: '40%', xs: '95%' }, mb: 2 }} label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
+
             />
             <br></br>
-            <Typography component='h2' sx={{fontSize: 22}}> Filters: </Typography>
+            <Typography component='h2' sx={{ fontSize: 22 }}> Filters: </Typography>
             {
                 Tags.length >= 1 &&
-                Tags.sort((a,b) => {
-                    if(a.selected===true && b.selected===false){
+                Tags.sort((a, b) => {
+                    if (a.selected === true && b.selected === false) {
                         return -1
-                    }else if(a.selected===false && b.selected===true){
+                    } else if (a.selected === false && b.selected === true) {
                         return 1
                     }
-                    if(a.Tag < b.Tag){
+                    if (a.Tag < b.Tag) {
                         return -1
-                    }else{
+                    } else {
                         return 1
                     }
                 }).map((tag, index) => {
                     if (tag.selected === true) {
                         return (
-                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1,mt: 1 }} onDelete={() => ToggleTagSelect(index)}></Chip>
+                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1, mt: 1 }} onDelete={() => ToggleTagSelect(index)}></Chip>
                         )
                     } else {
                         return (
-                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1,mt:1 }} variant='outlined' onClick={() => ToggleTagSelect(index)}></Chip>
+                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1, mt: 1 }} variant='outlined' onClick={() => ToggleTagSelect(index)}></Chip>
                         )
                     }
                 })
@@ -202,14 +231,14 @@ const MySubGreddits = () => {
             <br></br>
             <FormControl>
                 {/* <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel> */}
-                <Typography sx={{display: 'inline-block',fontSize: 22}}>Sorting:</Typography>
+                <Typography sx={{ display: 'inline-block', fontSize: 22 }}>Sorting:</Typography>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     defaultValue={'NameAsc'}
                     onChange={HandleSort}
-                    sx={{display: 'inline-block'}}
+                    sx={{ display: 'inline-block' }}
                 >
                     <FormControlLabel value="NameAsc" control={<Radio />} label="Name(Ascending)" />
                     <FormControlLabel value="NameDesc" control={<Radio />} label="Name(Descending)" />
@@ -230,7 +259,7 @@ const MySubGreddits = () => {
                     }}>
                         <Grid container>
                             {
-                                SortedData.map(e => <SubGredditCard handleLeave={handleLeave} key={e.id} data={e} UserSubGreddits={UserSubGreddits}/>)
+                                SortedData.map(e => <SubGredditCard handleLeave={handleLeave} key={e.id} data={e} UserSubGreddits={UserSubGreddits} />)
                             }
                         </Grid>
                     </Box> :
