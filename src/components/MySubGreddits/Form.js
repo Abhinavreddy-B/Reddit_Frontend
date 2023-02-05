@@ -233,11 +233,11 @@ const CreateSubGredditsForm = ({ data, setData, setEdit,edit }) => {
                                 <FormHelperText error>Banned Words Must be Single Worded</FormHelperText>
                             }
                         </FormControl>
+                        <Typography>SubGreddit Image:</Typography>
                         <TextField 
                             type='file'
                             name="SubGreddit-Image"
                             inputProps={{accept:"image/*"}}
-                            label="SubGreddit Image"
                         />
                         <Button
                             type="submit"

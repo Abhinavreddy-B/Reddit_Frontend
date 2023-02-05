@@ -27,13 +27,13 @@ const PostForm = ({ data, setData, setEdit }) => {
             // filtered = filtered.replace(regex,"******")
         })
         let flag = true
-        if(check !== val){
+        if (check !== val) {
             flag = flag && await window.confirm('Hey! You have banned words in you post, do you want to proceed?')
         }
-        if(flag === false){
+        if (flag === false) {
             setPinging(false)
             setEdit(false)
-            return 
+            return
         }
         try {
             const res = await ServerMethods.AddPost(data.id, val)
@@ -42,78 +42,78 @@ const PostForm = ({ data, setData, setEdit }) => {
             setEdit(false)
         } catch (e) {
             setPinging(false)
-                Notify({
-                    type: 'error',
-                    message: e.response.data.error
-                })
-            
+            Notify({
+                type: 'error',
+                message: e.response.data.error
+            })
+
             console.log(e)
         }
     }
 
     return (
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <AddIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Add Post
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            fullWidth
-                            label="Post Here...."
-                            name="Text"
-                            id='Post-Form'
-                            error={touched[1] && inv1}
-                            inputProps={{
-                                onChange: (event) => {
-                                    if (!event.target.value || event.target.value === null || event.target.value === '') {
-                                        setInv1(true)
-                                    } else {
-                                        setInv1(false)
-                                    }
-                                },
-                                onBlur: () => {
-                                    setTouched({ ...touched, 1: true })
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <AddIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Add Post
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <TextField
+                        margin="normal"
+                        fullWidth
+                        label="Post Here...."
+                        name="Text"
+                        id='Post-Form'
+                        error={touched[1] && inv1}
+                        inputProps={{
+                            onChange: (event) => {
+                                if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                    setInv1(true)
+                                } else {
+                                    setInv1(false)
                                 }
-                            }}
-
-                        />
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={() => setEdit(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={inv1 === true || pinging === true}
-                        >
-                            {
-                                pinging === true ?
-                                    <CircularProgress /> :
-                                    "Create"
+                            },
+                            onBlur: () => {
+                                setTouched({ ...touched, 1: true })
                             }
-                        </Button>
-                    </Box>
+                        }}
+
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        disabled={inv1 === true || pinging === true}
+                    >
+                        {
+                            pinging === true ?
+                                <CircularProgress /> :
+                                "Create"
+                        }
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => setEdit(false)}
+                    >
+                        Cancel
+                    </Button>
                 </Box>
-            </Container>
+            </Box>
+        </Container>
     );
 };
 
