@@ -26,8 +26,8 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
             lastName: data.get('Last Name'),
             password: data.get('password'),
             Email: data.get('email'),
-            Age: data.get('Age'),
-            ContactNumber: data.get('Contact Number')
+            Age: parseInt(data.get('Age')),
+            ContactNumber: parseInt(data.get('Contact Number'))
         };
         setEditable(false)
         try {
@@ -48,6 +48,91 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
             setPinging(false)
         }
     };
+    if(pinging===true){
+        return (<CircularProgress />)
+    }
+    if (editable === false) {
+        return (
+            <Container component="main" maxWidth="xs">
+                <Box
+                    sx={{
+                        marginTop: 3,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <PersonIcon></PersonIcon>
+                    </Avatar>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    margin="normal"
+                                    fullWidth
+                                    defaultValue={userData.firstName}
+                                    disabled={true}
+                                    variant='filled'
+                                    label="First Name"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    margin="normal"
+                                    fullWidth
+                                    label="Last Name"
+                                    variant='filled'
+                                    defaultValue={userData.lastName}
+                                    disabled={true}
+                                />
+                            </Grid>
+                        </Grid>
+                        <TextField
+                            variant='filled'
+                            margin="normal"
+                            fullWidth
+                            label="Username"
+                            defaultValue={userData.userName}
+                            disabled
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            label="email"
+                            type='email'
+                            defaultValue={userData.Email}
+                            disabled={true}
+                            variant='filled'
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            label="Age"
+                            type='number'
+                            defaultValue={userData.Age}
+                            disabled={true}
+                            variant='filled'
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            label="Contact Number"
+                            defaultValue={userData.ContactNumber}
+                            variant='filled'
+                            disabled
+                        />
+                        <Button
+                            sx={{ mt: 3, mb: 2, display: editable === true ? 'none' : 'block' }}
+                            onClick={() => setEditable(true)}
+                        >
+                            <EditIcon></EditIcon>
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+        )
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -85,6 +170,7 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                                         }
                                     },
                                 }}
+                                helperText={inv1 ? 'First Name is a required field' : ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -106,19 +192,10 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                                         }
                                     },
                                 }}
+                                helperText={inv2 ? 'Last Name is a required field' : ''}
                             />
                         </Grid>
                     </Grid>
-                    <TextField
-                        margin="normal"
-                        fullWidth
-                        id="userName"
-                        label="Username"
-                        name="userName"
-                        autoComplete="userName"
-                        defaultValue={userData.userName}
-                        disabled
-                    />
                     <TextField
                         margin="normal"
                         fullWidth
@@ -151,7 +228,7 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                         defaultValue={userData.Email}
                         disabled={editable === false ? true : false}
                         error={inv3}
-
+                        helperText={inv3 ? 'Email is a required field' : ''}
                     />
                     <TextField
                         margin="normal"
@@ -165,13 +242,14 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                         error={inv4}
                         inputProps={{
                             onChange: (event) => {
-                                if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                if (!event.target.value || event.target.value === null || event.target.value === '' || event.target.value <= 0 || event.target.value >= 100) {
                                     setInv4(true)
                                 } else {
                                     setInv4(false)
                                 }
                             },
                         }}
+                        helperText={inv4 ? 'Age must be between 1 and 100' : undefined}
                     />
                     <TextField
                         margin="normal"
@@ -195,7 +273,7 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                         defaultValue={userData.ContactNumber}
                         disabled={editable === false ? true : false}
                         error={inv5}
-                        helperText={inv5?'Should be of the format xxxxxxxxxx':undefined}
+                        helperText={inv5 ? 'Should be of the format xxxxxxxxxx' : undefined}
                     />
                     <Button
                         sx={{ mt: 3, mb: 2, display: editable === true ? 'none' : 'block' }}
@@ -222,7 +300,6 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                         sx={{ mt: 3, mb: 2, display: editable === false ? 'none' : 'block' }}
                         onClick={() => {
                             setEditable(false)
-                            window.location.reload()
                         }}
                         disabled={pinging}
                     >
