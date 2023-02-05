@@ -45,12 +45,18 @@ const CreateSubGredditsForm = ({ data, setData, setEdit,edit }) => {
         event.preventDefault();
         setPinging(true)
         const formdata = new FormData(event.currentTarget);
-        const newSubGreddit = {
-            Name: formdata.get('Name'),
-            Description: formdata.get('Description'),
-            Tags,
-            Banned
-        };
+        // const newSubGreddit = {
+        //     Name: formdata.get('Name'),
+        //     Description: formdata.get('Description'),
+        //     Tags: JSON.stringify(Tags),
+        //     Banned: JSON.stringify(Banned),
+        // };
+        const newSubGreddit = new FormData()
+        newSubGreddit.append('Name',formdata.get('Name'))
+        newSubGreddit.append('Description',formdata.get('Description'))
+        newSubGreddit.append('Tags',JSON.stringify(Tags))
+        newSubGreddit.append('Banned',JSON.stringify(Banned))
+        newSubGreddit.append('image',formdata.get('SubGreddit-Image'))
         setTags([])
         setBanned([])
         document.getElementById('Post-Name-Input').value=''
@@ -227,6 +233,12 @@ const CreateSubGredditsForm = ({ data, setData, setEdit,edit }) => {
                                 <FormHelperText error>Banned Words Must be Single Worded</FormHelperText>
                             }
                         </FormControl>
+                        <TextField 
+                            type='file'
+                            name="SubGreddit-Image"
+                            inputProps={{accept:"image/*"}}
+                            label="SubGreddit Image"
+                        />
                         <Button
                             type="submit"
                             fullWidth

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BaseUrl = process.env.NODE_ENV==='development' ? 'http://localhost:5000' : 'https://reddit-odhk.onrender.com'
+const BaseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://reddit-odhk.onrender.com'
 
 let token = window.localStorage.getItem('Greddit:token') || null
 
@@ -70,7 +70,16 @@ const DeleteFollowing = async (id) => {
 }
 
 const AddSubGreddit = async (data) => {
-    const res = await axios.post(`${BaseUrl}/api/subgreddit`, data, config())
+    const res = await axios({
+        method: "post",
+        url: `${BaseUrl}/api/subgreddit`,
+        data: data,
+        headers: { 
+            "Content-Type": "multipart/form-data",
+            "Authorization": token
+        },
+    })
+    // const res = await axios.post(`${BaseUrl}/api/subgreddit`, data, config())
     return res.data
 }
 
@@ -195,7 +204,7 @@ const PostReport = async (Concern, PostId) => {
         Concern,
         PostId
     }
-    const res = await axios.post(`${BaseUrl}/api/report`,data, config())
+    const res = await axios.post(`${BaseUrl}/api/report`, data, config())
     return res.data
 }
 
@@ -238,8 +247,8 @@ const ServerMethods = {
     resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits, GetJoinedSubGreddits, LeaveSubGreddit, GetSingleSubGredditPage,
     PostUpvote, PostDownvote, PostComment, AddPost, SavePost, FollowPostOwner, GetJoinRequests, SendJoinRequest, AcceptJoinRequests,
-    RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport,IgnoreReport,
-    BlockReport,DeleteReport,GetStatsGrowth,GetPostVsDate,GetVisitorsVsDate,GetReporedVsDeleted
+    RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport, IgnoreReport,
+    BlockReport, DeleteReport, GetStatsGrowth, GetPostVsDate, GetVisitorsVsDate, GetReporedVsDeleted
 }
 
 export default ServerMethods

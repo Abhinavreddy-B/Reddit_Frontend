@@ -91,7 +91,7 @@ const SingleSubGredditPage = () => {
                     </Box>
             }
             <Grid item xs={12} md={3} sx={{ height: '100%', textAlign: 'center' }}>
-                <img src="/logo.png" style={{ width: '80%' }} alt='lol' />
+                <img src={data.ImageUrl || "/logo.png"} style={{ width: '80%' }} alt='lol' />
             </Grid>
             <Grid item xs={12} md={9} sx={{ height: { md: '85vh' }, mt: 3, overflowY: { md: 'scroll' } }}>
                 <Typography sx={{ fontSize: 25, top: { md: 0 },display: 'block', zIndex: 10 }} gutterBottom>
