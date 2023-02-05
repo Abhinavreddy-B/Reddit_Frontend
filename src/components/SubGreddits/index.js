@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, FormControl, FormControlLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
+import { Chip, CircularProgress, FormControl, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import ServerMethods from '../../utils/Communicate';
@@ -168,35 +168,48 @@ const MySubGreddits = () => {
     return (
         <Box sx={{ px: 2 }}>
             <h1>All SubGreddits:</h1>
-            <TextField id="outlined-basic" label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
-                sx={{ mb: 2 }}
+            <TextField id="outlined-basic" sx={{width: {md:'40%',xs: '95%'},mb: 2}} label="Search" variant="outlined" value={search} onChange={(event) => setSearch(event.target.value)}
+                
             />
             <br></br>
-            Filters:
+            <Typography component='h2' sx={{fontSize: 22}}> Filters: </Typography>
             {
                 Tags.length >= 1 &&
-                Tags.map((tag, index) => {
+                Tags.sort((a,b) => {
+                    if(a.selected===true && b.selected===false){
+                        return -1
+                    }else if(a.selected===false && b.selected===true){
+                        return 1
+                    }
+                    if(a.Tag < b.Tag){
+                        return -1
+                    }else{
+                        return 1
+                    }
+                }).map((tag, index) => {
                     if (tag.selected === true) {
                         return (
-                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1 }} onDelete={() => ToggleTagSelect(index)}></Chip>
+                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1,mt: 1 }} onDelete={() => ToggleTagSelect(index)}></Chip>
                         )
                     } else {
                         return (
-                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1 }} variant='outlined' onClick={() => ToggleTagSelect(index)}></Chip>
+                            <Chip key={tag.Tag} label={tag.Tag} sx={{ ml: 1,mt:1 }} variant='outlined' onClick={() => ToggleTagSelect(index)}></Chip>
                         )
                     }
                 })
             }
             <br></br>
+            <br></br>
             <FormControl>
                 {/* <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel> */}
-                Sorting:
+                <Typography sx={{display: 'inline-block',fontSize: 22}}>Sorting:</Typography>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     defaultValue={'NameAsc'}
                     onChange={HandleSort}
+                    sx={{display: 'inline-block'}}
                 >
                     <FormControlLabel value="NameAsc" control={<Radio />} label="Name(Ascending)" />
                     <FormControlLabel value="NameDesc" control={<Radio />} label="Name(Descending)" />

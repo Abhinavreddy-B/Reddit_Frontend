@@ -185,7 +185,7 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                             title: 'Should be of the format xxxxxxxxxx',
                             inputMode: 'tel',
                             onChange: (event) => {
-                                if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                if (!event.target.value || event.target.value === null || event.target.value === '' || /[0-9]{10}/.test(event.target.value) === false) {
                                     setInv5(true)
                                 } else {
                                     setInv5(false)
@@ -195,25 +195,13 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                         defaultValue={userData.ContactNumber}
                         disabled={editable === false ? true : false}
                         error={inv5}
-
+                        helperText={inv5?'Should be of the format xxxxxxxxxx':undefined}
                     />
                     <Button
                         sx={{ mt: 3, mb: 2, display: editable === true ? 'none' : 'block' }}
                         onClick={() => setEditable(true)}
                     >
                         <EditIcon></EditIcon>
-                    </Button>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2, display: editable === false ? 'none' : 'block' }}
-                        onClick={() => {
-                            setEditable(false)
-                            window.location.reload()
-                        }}
-                        disabled={pinging}
-                    >
-                        Cancel
                     </Button>
                     <Button
                         type="submit"
@@ -227,6 +215,18 @@ const Details = ({ pinging, setPinging, setUserData, Notify, userData }) => {
                                 <CircularProgress /> :
                                 "Update"
                         }
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, display: editable === false ? 'none' : 'block' }}
+                        onClick={() => {
+                            setEditable(false)
+                            window.location.reload()
+                        }}
+                        disabled={pinging}
+                    >
+                        Cancel
                     </Button>
                 </Box>
             </Box>

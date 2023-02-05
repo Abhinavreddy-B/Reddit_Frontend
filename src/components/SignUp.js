@@ -262,7 +262,7 @@ export default function SignUp({ setSignUp }) {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={
-                                inv1 || inv2 || inv3 || inv4 || inv5 || pinging
+                                inv1 || inv2 || inv3 || inv4 || inv5 || inv6 || inv7 || pinging
                             }
                         >
                             {

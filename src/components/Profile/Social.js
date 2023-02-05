@@ -154,7 +154,7 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
                                     return (
                                         <ListItem key={f.id}>
                                             <ListItemText primary={f.firstName + ' ' + f.lastName} />
-                                            <ListItemButton>
+                                            <ListItemButton sx={{flexGrow: 0}}>
                                                 <Button variant="outlined" onClick={() => RemoveFollowing(f.id)}>Unfollow</Button>
                                             </ListItemButton>
                                         </ListItem>

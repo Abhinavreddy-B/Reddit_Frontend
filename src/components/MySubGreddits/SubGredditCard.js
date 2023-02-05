@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import AccessAlarmRoundedIcon from '@mui/icons-material/AccessAlarmRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
+import moment from 'moment';
 
 const SubGredditCard = ({ data, HandleDelete }) => {
     const navigate = useNavigate()
 
-
+    const dateObject = new Date(data.CreatedAt)
+    const formattedDate = moment(dateObject).format('DD/MM/YYYY (h:mm:ss a)');
     return (
         <Grid item xs={12} md={6} lg={4}>
             <Card sx={{ margin: 2, boxShadow: 3, borderRadius: 2 }}>
@@ -35,7 +37,7 @@ const SubGredditCard = ({ data, HandleDelete }) => {
                         <Grid item xs={6} sx={{textAlign: 'center'}}>
                             <AccessAlarmRoundedIcon sx={{height: 20}} />
                             <Typography sx={{ mb: 1.5 }} color="text.primary">
-                                {data.CreatedAt}
+                                {formattedDate}
                             </Typography>
                         </Grid>
                     </Grid>
