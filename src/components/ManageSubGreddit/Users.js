@@ -39,6 +39,12 @@ const Users = () => {
             <Grid container>
                 <Grid item xs={12}>
                     <List sx={{ display: 'block', height: { md: '60vh' }, overflowY: { md: 'scroll' } }}>
+                        <ListItem>
+                            <ListItemText sx={{ flexGrow: 1 }}>
+                                You <Chip label='Moderator' color='info'></Chip>
+                            </ListItemText>
+                        </ListItem>
+                        <Divider/>
                         {
                             users.filter(f => f.blocked === false).map(r => {
                                 return (
