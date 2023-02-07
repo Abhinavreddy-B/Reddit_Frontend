@@ -78,7 +78,6 @@ const SingleSubGredditPage = () => {
             <Dialog
                 open={edit === true}
                 TransitionComponent={Transition}
-                keepMounted
                 aria-describedby="alert-dialog-slide-description"
             >
                 <Box sx={style}>

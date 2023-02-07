@@ -67,7 +67,6 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
         <Dialog
             open={open}
             TransitionComponent={Transition}
-            keepMounted
             aria-describedby="alert-dialog-slide-description"
             sx={{minWidth: '60%',maxWidth: '90%'}}
         >
@@ -139,7 +138,6 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
         <Dialog
             open={open}
             TransitionComponent={Transition}
-            keepMounted
             aria-describedby="alert-dialog-slide-description"
         >
             <Box sx={style}>

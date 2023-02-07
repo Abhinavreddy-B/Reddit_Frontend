@@ -24,15 +24,19 @@ const ReportForm = ({ setReportBox, PostId }) => {
         1: false
     })
     const [pinging, setPinging] = useState(false)
+    const [concern,setConcern] = useState()
 
     const {Notify} = useContext(NotifyContext)
 
     const HandleSubmit = async (event) => {
+        console.log(document.getElementById('Report-Form'))
         event.preventDefault();
         setPinging(true)
+        console.log(document.querySelectorAll('#Report-Form'))
         const val = document.getElementById('Report-Form').value;
-        document.getElementById('Report-Form').value = null
+        // document.getElementById('Report-Form').value = null
         try{
+            console.log(val)
             await ServerMethods.PostReport(val,PostId)
             Notify({
                 type: 'success',
@@ -77,6 +81,7 @@ const ReportForm = ({ setReportBox, PostId }) => {
                         inputProps={{
                             onChange: (event) => {
                                 if (!event.target.value || event.target.value === null || event.target.value === '') {
+                                    setConcern(event.target.value)
                                     setInv1(true)
                                 } else {
                                     setInv1(false)
@@ -191,7 +196,7 @@ const PostItem = ({ post, setData, data }) => {
     let filtered = post.Text
     return (
         <>
-            <Dialog open={ReportBox} TransitionComponent={Transition} keepMounted>
+            <Dialog open={ReportBox} TransitionComponent={Transition}>
                 <ReportForm setReportBox={setReportBox} PostId={post.id}/>
             </Dialog>
             <Paper elevation={5} sx={{ m: 1, p: 1 }}>
