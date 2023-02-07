@@ -24,9 +24,9 @@ const ReportForm = ({ setReportBox, PostId }) => {
         1: false
     })
     const [pinging, setPinging] = useState(false)
-    const [concern,setConcern] = useState()
+    const [concern, setConcern] = useState()
 
-    const {Notify} = useContext(NotifyContext)
+    const { Notify } = useContext(NotifyContext)
 
     const HandleSubmit = async (event) => {
         console.log(document.getElementById('Report-Form'))
@@ -35,16 +35,16 @@ const ReportForm = ({ setReportBox, PostId }) => {
         console.log(document.querySelectorAll('#Report-Form'))
         const val = document.getElementById('Report-Form').value;
         // document.getElementById('Report-Form').value = null
-        try{
+        try {
             console.log(val)
-            await ServerMethods.PostReport(val,PostId)
+            await ServerMethods.PostReport(val, PostId)
             Notify({
                 type: 'success',
                 message: 'Reported Succesfully'
             })
             setPinging(false)
             setReportBox(false)
-        }catch(e){
+        } catch (e) {
             Notify({
                 type: 'error',
                 message: e.response.data.error
@@ -197,7 +197,7 @@ const PostItem = ({ post, setData, data }) => {
     return (
         <>
             <Dialog open={ReportBox} TransitionComponent={Transition}>
-                <ReportForm setReportBox={setReportBox} PostId={post.id}/>
+                <ReportForm setReportBox={setReportBox} PostId={post.id} />
             </Dialog>
             <Paper elevation={5} sx={{ m: 1, p: 1 }}>
                 <ListItem>
@@ -242,31 +242,33 @@ const PostItem = ({ post, setData, data }) => {
                 <Collapse in={CommentBox}>
                     <FormControl sx={{ m: 2, ml: 5, width: { md: '50ch', xs: '80%' } }} variant="standard">
                         <InputLabel htmlFor="standard-adornment-password">New Comment</InputLabel>
-                        <Input
-                            id="New-Comment"
-                            endAdornment={
-                                <>
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            // onClick={handleClickShowPassword}
-                                            onClick={HandleAddComment}
-                                        >
-                                            <DoneIcon color='success' />
-                                        </IconButton>
-                                    </InputAdornment>
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            // onClick={handleClickShowPassword}
-                                            onClick={() => setCommentBox(false)}
-                                        >
-                                            <CloseIcon color='error' />
-                                        </IconButton>
-                                    </InputAdornment>
-                                </>
-                            }
-                        />
+                        {CommentBox &&
+                            <Input
+                                id="New-Comment"
+                                endAdornment={
+                                    <>
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                // onClick={handleClickShowPassword}
+                                                onClick={HandleAddComment}
+                                            >
+                                                <DoneIcon color='success' />
+                                            </IconButton>
+                                        </InputAdornment>
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                // onClick={handleClickShowPassword}
+                                                onClick={() => setCommentBox(false)}
+                                            >
+                                                <CloseIcon color='error' />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    </>
+                                }
+                            />
+                        }
                     </FormControl>
                 </Collapse>
                 <>
