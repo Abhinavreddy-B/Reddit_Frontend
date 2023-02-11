@@ -23,6 +23,12 @@ const setToken = (user) => {
     token = `Bearer ${user.token}`
 }
 
+const verifyToken = async (Savedtoken) => {
+    await axios.get(`${BaseUrl}/api/users/verify`,{
+        headers: { Authorization: Savedtoken }
+    })
+}
+
 const signIn = async (credentials, type) => {
     const res = await axios.post(`${BaseUrl}/api/users/login`, credentials)
     return res.data
@@ -244,7 +250,7 @@ const GetReporedVsDeleted = async (id) => {
 }
 
 const ServerMethods = {
-    resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
+    verifyToken,resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits, GetJoinedSubGreddits, LeaveSubGreddit, GetSingleSubGredditPage,
     PostUpvote, PostDownvote, PostComment, AddPost, SavePost, FollowPostOwner, GetJoinRequests, SendJoinRequest, AcceptJoinRequests,
     RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport, IgnoreReport,

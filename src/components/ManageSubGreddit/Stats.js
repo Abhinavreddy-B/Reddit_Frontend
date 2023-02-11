@@ -4,7 +4,7 @@ import ServerMethods from '../../utils/Communicate';
 
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, BarElement, Legend, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js';
-import { Grid, Paper } from '@mui/material';
+import { CircularProgress, Grid, Paper } from '@mui/material';
 ChartJS.register(
     Title, Tooltip, BarElement, Legend,
     CategoryScale, LinearScale, PointElement, Filler
@@ -123,7 +123,7 @@ const Stats = () => {
     //     },
     //   };
     if (Growth === undefined || PostVsDate === undefined || VisitorsVsDate === undefined || ReportedVsDeleted === undefined) {
-        return <></>
+        return <CircularProgress />
     }
 
     return (

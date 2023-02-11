@@ -34,10 +34,17 @@ function App() {
     const saved = JSON.parse(window.localStorage.getItem('Greddit:token'))
     
     if (saved) {
-      setUser(saved)
-      ServerMethods.setToken(saved)
+      ServerMethods.verifyToken(`Bearer ${saved.token}`).then(() => {
+        setUser(saved)
+        ServerMethods.setToken(saved)
+        setDeciting(false)
+      }).catch((err) => {
+        Notify({type: 'error',message: 'Something went wrong'})
+        setDeciting(false)
+      })
+    }else{
+      setDeciting(false)
     }
-    setDeciting(false)
   }, [])
   
   useEffect(() => {
