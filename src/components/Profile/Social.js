@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardContent, CircularProgress, Dialog, Grid, ListItem, ListItemButton, ListItemText, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NotifyContext from '../../contexts/NotifyContext';
 import ServerMethods from '../../utils/Communicate';
 
@@ -33,6 +34,7 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
     const [data, setData] = useState()
     const { Notify } = useContext(NotifyContext)
     const [pinging, setPinging] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (open === false) {
@@ -85,6 +87,9 @@ const FollowerModal = ({ open, setOpen, setUserData, userData }) => {
                                             <ListItemButton sx={{flexGrow: 0}}>
                                                 <Button variant="outlined" onClick={() => RemoveFollower(f.id)}>Remove</Button>
                                             </ListItemButton>
+                                            <ListItemButton sx={{flexGrow: 0}}>
+                                                <Button variant="outlined" onClick={() => navigate(`/chat/${f.id}`)}>Chat</Button>
+                                            </ListItemButton>
                                         </ListItem>
                                     )
                                 })
@@ -104,6 +109,7 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
     const [data, setData] = useState()
     const [pinging, setPinging] = useState(false)
     const { Notify } = useContext(NotifyContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (open === false) {
@@ -154,6 +160,9 @@ const FollowingModal = ({ open, setOpen, userData, setUserData }) => {
                                             <ListItemText primary={f.firstName + ' ' + f.lastName} />
                                             <ListItemButton sx={{flexGrow: 0}}>
                                                 <Button variant="outlined" onClick={() => RemoveFollowing(f.id)}>Unfollow</Button>
+                                            </ListItemButton>
+                                            <ListItemButton sx={{flexGrow: 0}}>
+                                                <Button variant="outlined" onClick={() => navigate(`/chat/${f.id}`)}>Chat</Button>
                                             </ListItemButton>
                                         </ListItem>
                                     )

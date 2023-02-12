@@ -15,6 +15,7 @@ import SubGreddits from "./components/SubGreddits"
 import SingleSubGredditPage from "./components/SingleSubGreddit";
 import ManageSubGreddit from "./components/ManageSubGreddit";
 import SavedPostsPage from "./components/Saved";
+import Chat from "./components/Chat";
 
 const darkTheme = createTheme({
   palette: {
@@ -34,7 +35,9 @@ function App() {
     const saved = JSON.parse(window.localStorage.getItem('Greddit:token'))
     
     if (saved) {
+      console.log("Entered")
       ServerMethods.verifyToken(`Bearer ${saved.token}`).then(() => {
+        console.log("Hi")
         setUser(saved)
         ServerMethods.setToken(saved)
         setDeciting(false)
@@ -87,6 +90,7 @@ function App() {
                       <Route exact path="/subgreddits" element={<SubGreddits />}></Route>
                       <Route exact path="/subgreddit/:id" element={<SingleSubGredditPage />}></Route>
                       <Route exact path="/manage/:id" element={<ManageSubGreddit />}></Route>
+                      <Route exact path="/chat/:id" element={<Chat />}></Route>
                       <Route exact path="*" element={<Navigate replace to='/profile'></Navigate>}></Route>
                     </>
                   }

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BaseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://reddit-odhk.onrender.com'
+export const BaseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://reddit-odhk.onrender.com'
 
 let token = window.localStorage.getItem('Greddit:token') || null
 
