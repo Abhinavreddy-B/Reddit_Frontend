@@ -79,7 +79,7 @@ const MySubGreddits = () => {
 
     // Ping server for new data (on reaching end of page)
     useEffect(() => {
-        if (!TagRef.current || !DataRef.current) {
+        if (!TagRef.current || !DataRef.current || Page === 1) {
             return;
         }
         setLoadingNew(true)
