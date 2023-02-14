@@ -1,115 +1,127 @@
-import { Chip, CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, Radio, RadioGroup, Switch, TextField, Typography } from '@mui/material';
+import { Chip, CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, Paper, Radio, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ServerMethods from '../../utils/Communicate';
 import SubGredditCard from './SubGredditCard';
-import Fuse from 'fuse.js'
-
-const NameAscCmp = (a, b) => {
-    if (a.Name < b.Name) {
-        return -1
-    } else if (a.Name > b.Name) {
-        return 1
-    }
-    return 0
-}
-
-const NameDescCmp = (a, b) => {
-    if (a.Name > b.Name) {
-        return -1
-    } else if (a.Name < b.Name) {
-        return 1
-    }
-    return 0
-}
-
-const FollowerCmp = (a, b) => {
-    if (a.PeopleCount > b.PeopleCount) {
-        return -1
-    } else if (a.PeopleCount < b.PeopleCount) {
-        return 1
-    }
-    return 0
-}
-
-const CreationCmp = (a, b) => {
-    if (new Date(a.CreatedAt) > new Date(b.CreatedAt)) {
-        return -1
-    } else if (new Date(a.CreatedAt) < new Date(b.CreatedAt)) {
-        return 1
-    }
-    return 0
-}
 
 const MySubGreddits = () => {
     const [data, setData] = useState()
     const [pinging, setPinging] = useState(false)
     const [search, setSearch] = useState()
-    const [Tags, setTags] = useState([])
+    const [Tags, setTags] = useState()
     const [UserSubGreddits, setUserSubGredits] = useState()
     const [fuzzy, setFuzzy] = useState(false)
+    const [Page, setPage] = useState(1)
+    const [NoOfPages, setNoOfPages] = useState(1)
+    const [sort, setSort] = useState('NameAsc')
+    const [LoadingNew, setLoadingNew] = useState(false)
 
+
+    const TagRef = useRef()
+    const SearchRef = useRef()
+    const FuzzyRef = useRef()
+    const SortRef = useRef()
+    const DataRef = useRef()
+    const PageRef = useRef()
+    const LoadingNewRef = useRef()
+    const PingingRef = useRef()
+
+
+    TagRef.current = Tags
+    SearchRef.current = search
+    FuzzyRef.current = fuzzy
+    SortRef.current = sort
+    DataRef.current = data
+    PageRef.current = Page
+    LoadingNewRef.current = LoadingNew
+    PingingRef.current = pinging
+
+
+    // Inital loading, loading tags , loading inital data
     useEffect(() => {
-        setPinging(true)
         ServerMethods.GetAllSubGreddits().then((response) => {
-            setData(response.slice().sort(NameAscCmp))
-            const tagArrays = response.map(e => e.Tags)
-            let tags = []
-            tagArrays.forEach(arr => {
-                tags = [...new Set([...tags, ...arr])]
-            })
-            setTags(tags.map(e => { return { Tag: e, selected: false } }))
-            setPinging(false)
+            setData(response.items)
+            setNoOfPages(response.totalPages)
         })
         ServerMethods.GetJoinedSubGreddits().then((response) => {
             setUserSubGredits(response)
         })
+        ServerMethods.GetAllTags().then((response) => {
+            console.log("Hey", response)
+            setTags(response.map(e => { return { Tag: e, selected: false } }))
+        }).catch((e) => {
+            console.log(e)
+        })
     }, [])
 
-    const JoinedCmp = (a, b) => {
-        const f1 = UserSubGreddits.find(p => p.id.id === a.id)
-        const f2 = UserSubGreddits.find(p => p.id.id === b.id)
-        const e1 = f1 && f1.role !== 'left'
-        const e2 = f2 && f2.role !== 'left'
 
-        if (e1 && !e2) {
-            return -1
-        } else if (!e1 && e2) {
-            return 1
+    // Ping server when any of search, selected tags, fuzzy(enable/disable) , sort option changes
+    useEffect(() => {
+        if (!Tags) {
+            return;
         }
-        return 0
-    }
-    const FuzzyCmp = (a, b) => {
-        if (a.refIndex < b.refIndex) {
-            return -1
-        } else if (a.refIndex > b.refIndex) {
-            return 1
+        setPinging(true)
+        setPage(1)
+        ServerMethods.GetAllSubGreddits({
+            search,
+            Tags: Tags.filter(m => m.selected === true).map(m => m.Tag),
+            sort,
+            fuzzy,
+            page: 1,
+        }).then(res => {
+            console.log(res)
+            setNoOfPages(res.totalPages)
+            setData(res.items)
+            setPinging(false)
+        })
+    }, [search, Tags, fuzzy, sort])
+
+
+    // Ping server for new data (on reaching end of page)
+    useEffect(() => {
+        if (!TagRef.current || !DataRef.current) {
+            return;
         }
-        return 0
-    }
+        setLoadingNew(true)
+        ServerMethods.GetAllSubGreddits({
+            search: SearchRef.current,
+            Tags: TagRef.current.filter(m => m.selected === true).map(m => m.Tag),
+            sort: SortRef.current,
+            fuzzy: FuzzyRef.current,
+            page: Page,
+        }).then(res => {
+            console.log(res)
+            setNoOfPages(res.totalPages)
+            setData(DataRef.current.concat(res.items))
+            setLoadingNew(false)
+        })
+    }, [Page])
+
+    // change page number on reaching end of scrolling, changes whenever NoOfPages changes
+    useEffect(() => {
+        if(!DataRef.current){
+            return;
+        }
+        const handleScroll = () => {
+            if(!DataRef.current || PingingRef.current === true || LoadingNewRef.current === true){
+                return
+            }
+            const windowHeight = document.body.scrollHeight-document.body.clientHeight
+            const scrolledDistance = window.scrollY
+            console.log(document.body.scrollHeight-document.body.clientHeight,window.scrollY)
+            if (windowHeight - scrolledDistance < 1 && LoadingNewRef.current !== true) {
+                if(PageRef.current < NoOfPages){
+                    setPage(PageRef.current + 1)
+                    console.log("Scrolling")
+                }
+            }
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [NoOfPages])
 
     const HandleSort = (event) => {
-        switch (event.target.value) {
-            case 'NameAsc': {
-                setData(data.slice().sort(NameAscCmp))
-                break;
-            }
-            case 'NameDesc': {
-                setData(data.slice().sort(NameDescCmp))
-                break;
-            }
-            case 'Followers': {
-                setData(data.slice().sort(FollowerCmp))
-                break;
-            }
-            case 'Creation': {
-                setData(data.slice().sort(CreationCmp))
-                break;
-            }
-            default: {
-                console.log('hello')
-            }
-        }
+        setSort(event.target.value)
     }
 
     const handleLeave = async (id) => {
@@ -121,16 +133,7 @@ const MySubGreddits = () => {
         }
     }
 
-    if (!UserSubGreddits || !data || pinging === true) {
-        return (
-            <>
-                <h1>Your SubGreddits:</h1>
-                <CircularProgress />
-            </>
-        )
-    }
-
-    if (!data) {
+    if (!data || !Tags) {
         return (
             <Box>
                 <h1>All SubGreddits:</h1>
@@ -138,26 +141,7 @@ const MySubGreddits = () => {
             </Box>
         )
     }
-    // const FilteredData = data ? ((search !== undefined && search !== '' && search !== null) ? data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())) : data) : []
-    const fuse = new Fuse(data, {
-        keys: ['Name']
-    })
 
-    const FilteredData = (search !== undefined && search !== '' && search !== null) ? (fuzzy? fuse.search(search) : data.filter(f => f.Name.toLowerCase().includes(search.toLowerCase())).map(f => {return {item: f,refIndex: 1}})) : data.map(f => { return { item: f, refIndex: 1 } })
-
-    const TagFiltered = FilteredData ? (Tags.filter(t => t.selected === true).length > 0 ? FilteredData.filter(fdat => {
-        for (let i = 0; i < Tags.length; i++) {
-            if (Tags[i].selected === true && fdat.item.Tags.find(val => val === Tags[i].Tag)) {
-                return true;
-            }
-        }
-        return false;
-    }) : FilteredData) : []
-    
-    console.log("Hi", TagFiltered)
-    const FuzzyData = TagFiltered.slice().sort(FuzzyCmp).map(f => f.item)
-    const SortedData = UserSubGreddits ? FuzzyData.slice().sort(JoinedCmp) : TagFiltered.slice()
-    
 
     const ToggleTagSelect = (index) => {
         setTags(Tags.map((e, i) => {
@@ -169,26 +153,6 @@ const MySubGreddits = () => {
         }))
     }
 
-    // const HandleDelete = async (id) => {
-    //     setPinging(true)
-    //     try {
-    //         await ServerMethods.DeleteSubGreddit(id)
-    //         setData(data.filter(f => f.id !== id))
-    //         Notify({
-    //             type: 'success',
-    //             message: `Deleted SubGreddit`
-    //         })
-    //         setPinging(false)
-    //     } catch (e) {
-    //         console.log(e)
-    //         Notify({
-    //             type: 'error',
-    //             message: `Couldnt Delete`
-    //         })
-    //         setPinging(false)
-    //     }
-    // }
-    // console.log(Tags.map((tag) => "<Chip key={tag} label={tag} sx={{ ml: 1 }} variant=\"outlined\"></Chip>"))
 
     return (
         <Box sx={{ px: 2 }}>
@@ -252,6 +216,12 @@ const MySubGreddits = () => {
                     /> */}
                 </RadioGroup>
             </FormControl>
+            <Paper style={{ width: 'fit-content', padding: 5 }}>
+                <Typography sx={{ fontSize: 22, textAlign: 'center' }}>Scroll to see Infinite Loading</Typography>
+                {/* <Button onClick={() => setPage(Page - 1)} disabled={Page === 1} style={{ display: 'inline-block' }}>-</Button> */}
+                {/* <Typography style={{ display: 'inline-block' }}>{Page}/{NoOfPages}</Typography> */}
+                {/* <Button onClick={() => setPage(Page + 1)} disabled={Page === NoOfPages} style={{ display: 'inline-block' }}>+</Button> */}
+            </Paper>
             {
                 data && pinging === false ?
                     <Box sx={{
@@ -259,11 +229,23 @@ const MySubGreddits = () => {
                     }}>
                         <Grid container>
                             {
-                                SortedData.map(e => <SubGredditCard handleLeave={handleLeave} key={e.id} data={e} UserSubGreddits={UserSubGreddits} />)
+                                data.map(e => <SubGredditCard handleLeave={handleLeave} key={e.id} data={e} UserSubGreddits={UserSubGreddits} />)
                             }
                         </Grid>
                     </Box> :
+                    <Box>
+                        <CircularProgress />
+                    </Box>
+            }
+            {
+                LoadingNew === true &&
+                <Box>
                     <CircularProgress />
+                </Box>
+            }
+            {
+                LoadingNew === false && Page === NoOfPages &&
+                <Typography style={{textAlign: 'center'}}>End of Records</Typography>
             }
         </Box>
     )

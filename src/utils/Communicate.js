@@ -99,8 +99,16 @@ const DeleteSubGreddit = async (id) => {
     return res
 }
 
-const GetAllSubGreddits = async () => {
-    const res = await axios.get(`${BaseUrl}/api/subgreddit/all`, config())
+const GetAllTags = async () => {
+    console.log("Here")
+    const res = await axios.get(`${BaseUrl}/api/subgreddit/tags`, config())
+    console.log("Returning")
+    return res.data
+}
+
+
+const GetAllSubGreddits = async (query) => {
+    const res = await axios.get(`${BaseUrl}/api/subgreddit/all`, { ...(config()), params: query})
     return res.data
 }
 
@@ -254,7 +262,7 @@ const ServerMethods = {
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits, GetJoinedSubGreddits, LeaveSubGreddit, GetSingleSubGredditPage,
     PostUpvote, PostDownvote, PostComment, AddPost, SavePost, FollowPostOwner, GetJoinRequests, SendJoinRequest, AcceptJoinRequests,
     RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport, IgnoreReport,
-    BlockReport, DeleteReport, GetStatsGrowth, GetPostVsDate, GetVisitorsVsDate, GetReporedVsDeleted
+    BlockReport, DeleteReport, GetStatsGrowth, GetPostVsDate, GetVisitorsVsDate, GetReporedVsDeleted,GetAllTags
 }
 
 export default ServerMethods
