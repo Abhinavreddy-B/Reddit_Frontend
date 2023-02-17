@@ -1,3 +1,0 @@
-/api/* https://reddit-odhk.onrender.com/:splat 200
-/socket.io/* https://reddit-odhk.onrender.com/:splat 200
-/* /index.html 200 
