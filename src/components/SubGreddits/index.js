@@ -133,7 +133,7 @@ const MySubGreddits = () => {
         }
     }
 
-    if (!data || !Tags) {
+    if (!data || !Tags ||!UserSubGreddits) {
         return (
             <Box>
                 <h1>All SubGreddits:</h1>
