@@ -142,7 +142,7 @@ const PostComment = async (id, comment) => {
     const data = {
         comment
     }
-    const res = await axios.post(`${BaseUrl}/api/post/comment/${id}`, data, config())
+    const res = await axios.post(`${BaseUrl}/api/comment/post/${id}`, data, config())
     return res.data
 }
 
@@ -258,12 +258,23 @@ const GetReporedVsDeleted = async (id) => {
     return res.data
 }
 
+const PostCommentReply = async (id,Reply) => {
+    console.log("inside post")
+    const res = await axios.post(`${BaseUrl}/api/comment/${id}/comment`,{commentReply: Reply},config())
+    return res.data
+}
+
+const GetCommentReplies = async (id) => {
+    const res = await axios.get(`${BaseUrl}/api/comment/${id}`,config())
+    return res.data
+}
 const ServerMethods = {
     verifyToken,resetToken, setToken, signIn, signUp, GetUserData, UpdateUserData, getFollowers, getFollowing, DeleteFollower, DeleteFollowing,
     AddSubGreddit, GetOwnedSubGreddits, DeleteSubGreddit, GetAllSubGreddits, GetJoinedSubGreddits, LeaveSubGreddit, GetSingleSubGredditPage,
     PostUpvote, PostDownvote, PostComment, AddPost, SavePost, FollowPostOwner, GetJoinRequests, SendJoinRequest, AcceptJoinRequests,
     RejectJoinRequests, GetSubGredditUsers, GetSavedPosts, RemoveSavedPost, GetReports, PostReport, IgnoreReport,
-    BlockReport, DeleteReport, GetStatsGrowth, GetPostVsDate, GetVisitorsVsDate, GetReporedVsDeleted,GetAllTags
+    BlockReport, DeleteReport, GetStatsGrowth, GetPostVsDate, GetVisitorsVsDate, GetReporedVsDeleted,GetAllTags,PostCommentReply
+    ,GetCommentReplies
 }
 
 export default ServerMethods

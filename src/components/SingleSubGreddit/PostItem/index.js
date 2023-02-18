@@ -1,125 +1,23 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, CircularProgress, Collapse, Container, Dialog, Divider, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemButton, ListItemText, Paper, Slide, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Collapse, Dialog, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemButton, ListItemText, Paper, Slide, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import { Box } from '@mui/system';
-import { ExpandMore } from '@mui/icons-material';
-import ServerMethods from '../../utils/Communicate';
+import { ExpandMore, ThumbDown, ThumbUp } from '@mui/icons-material';
+import ServerMethods from '../../../utils/Communicate';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import NotifyContext from '../../contexts/NotifyContext';
+import NotifyContext from '../../../contexts/NotifyContext';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ReportIcon from '@mui/icons-material/Report';
+import ReportForm from './ReportForm';
+import CommentItem from './CommentItem';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="left" ref={ref} {...props} />;
 });
-
-const ReportForm = ({ setReportBox, PostId }) => {
-
-    const [inv1, setInv1] = useState(true)
-    const [touched, setTouched] = useState({
-        1: false
-    })
-    const [pinging, setPinging] = useState(false)
-    const [concern, setConcern] = useState()
-
-    const { Notify } = useContext(NotifyContext)
-
-    const HandleSubmit = async (event) => {
-        console.log(document.getElementById('Report-Form'))
-        event.preventDefault();
-        setPinging(true)
-        console.log(document.querySelectorAll('#Report-Form'))
-        const val = document.getElementById('Report-Form').value;
-        // document.getElementById('Report-Form').value = null
-        try {
-            console.log(val)
-            await ServerMethods.PostReport(val, PostId)
-            Notify({
-                type: 'success',
-                message: 'Reported Succesfully'
-            })
-            setPinging(false)
-            setReportBox(false)
-        } catch (e) {
-            Notify({
-                type: 'error',
-                message: e.response.data.error
-            })
-            setPinging(false)
-            setReportBox(false)
-        }
-    }
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <ReportIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Report Post
-                </Typography>
-                <Box component="form" sx={{ mt: 1 }}>
-                    <TextField
-                        margin="normal"
-                        fullWidth
-                        label="Your Concern...."
-                        name="Text"
-                        id='Report-Form'
-                        error={touched[1] && inv1}
-                        inputProps={{
-                            onChange: (event) => {
-                                if (!event.target.value || event.target.value === null || event.target.value === '') {
-                                    setConcern(event.target.value)
-                                    setInv1(true)
-                                } else {
-                                    setInv1(false)
-                                }
-                            },
-                            onBlur: () => {
-                                setTouched({ ...touched, 1: true })
-                            }
-                        }}
-
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        disabled={inv1 === true || pinging === true}
-                        onClick={HandleSubmit}
-                    >
-                        {
-                            pinging === true ?
-                                <CircularProgress /> :
-                                "Create"
-                        }
-                    </Button>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={() => setReportBox(false)}
-                    >
-                        Cancel
-                    </Button>
-                </Box>
-            </Box>
-        </Container>
-    )
-}
 
 const PostItem = ({ post, setData, data }) => {
 
@@ -131,7 +29,11 @@ const PostItem = ({ post, setData, data }) => {
     const Upvote = async () => {
         try {
             await ServerMethods.PostUpvote(post.id)
-            setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + 1 }) })
+            if (post.Downvoted === false) {
+                setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + (post.Upvoted ? -1 : 1), Upvoted: !post.Upvoted }) })
+            } else {
+                setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes + 1, Upvoted: true, Downvotes: post.Downvotes - 1, Downvoted: false }) })
+            }
         } catch (e) {
             console.log(e)
         }
@@ -140,7 +42,12 @@ const PostItem = ({ post, setData, data }) => {
     const Downvote = async () => {
         try {
             await ServerMethods.PostDownvote(post.id)
-            setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + 1 }) })
+            if (post.Upvoted === false) {
+                setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Downvotes: post.Downvotes + (post.Downvoted ? -1 : 1), Downvoted: !post.Downvoted }) })
+            } else {
+                setData({ ...data, Posts: data.Posts.map(f => f.id !== post.id ? f : { ...post, Upvotes: post.Upvotes - 1, Upvoted: false, Downvotes: post.Downvotes + 1, Downvoted: true }) })
+
+            }
         } catch (e) {
             console.log(e)
         }
@@ -208,13 +115,21 @@ const PostItem = ({ post, setData, data }) => {
                     <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                         <ListItemButton onClick={Upvote}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                                <ThumbUpOutlinedIcon color='success' />
+                                {
+                                    post.Upvoted === true ?
+                                        <ThumbUp color='success' /> :
+                                        <ThumbUpOutlinedIcon color='success' />
+                                }
                                 {post.Upvotes}
                             </Box>
                         </ListItemButton>
                         <ListItemButton onClick={Downvote}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                                <ThumbDownOutlinedIcon color='error' />
+                                {
+                                    post.Downvoted === true ?
+                                        <ThumbDown color='error' /> :
+                                        <ThumbDownOutlinedIcon color='error' />
+                                }
                                 <div>{post.Downvotes}</div>
                             </Box>
                         </ListItemButton>
@@ -232,8 +147,8 @@ const PostItem = ({ post, setData, data }) => {
                             <ListItemButton onClick={() => setCommentBox(!CommentBox)}>
                                 <AddCommentOutlinedIcon color='info' />
                             </ListItemButton>
-                            <ListItemButton >
-                                <ReportIcon color='error' onClick={() => setReportBox(true)} />
+                            <ListItemButton onClick={() => setReportBox(true)}>
+                                <ReportIcon color='error' />
                             </ListItemButton>
                         </Box>
                     </Box>
@@ -272,7 +187,7 @@ const PostItem = ({ post, setData, data }) => {
                     </FormControl>
                 </Collapse>
                 <>
-                    <Accordion sx={{ width: { lg: '60%', md: '80%', xs: '95%' }, md: 2, pl: 5 }}>
+                    <Accordion sx={{ width: '95%', md: 2, pl: 5, border: 0, borderLeft: 3 }}>
                         <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="panel1a-content"
@@ -281,11 +196,11 @@ const PostItem = ({ post, setData, data }) => {
                             <Typography sx={{ fontWeight: 'bold' }}>Comments ({post.Comments.length})</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <List component="div" sx={{ pl: '10%' }}>
+                            <Box sx={{ pl: 3, border: 0, borderLeft: 1 }}>
                                 {
-                                    post.Comments.map(c => <><Divider light /><ListItemText primary={c} /></>)
+                                    post.Comments.map(c => <CommentItem key={c.id} comment={c} />)
                                 }
-                            </List>
+                            </Box>
                         </AccordionDetails>
                     </Accordion>
                 </>
