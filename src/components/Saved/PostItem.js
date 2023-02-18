@@ -5,6 +5,7 @@ import { ExpandMore } from '@mui/icons-material';
 import ServerMethods from '../../utils/Communicate';
 import NotifyContext from '../../contexts/NotifyContext';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import CommentItem from '../SingleSubGreddit/PostItem/CommentItem'
 
 const PostItem = ({ post, posts, setPosts }) => {
     const { Notify } = useContext(NotifyContext)
@@ -43,22 +44,22 @@ const PostItem = ({ post, posts, setPosts }) => {
 
 
             <>
-                <Accordion sx={{ width: { lg: '50%', md: '80%', xs: '95%' }, md: 2, pl: 5 }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography sx={{ fontWeight: 'bold' }}>Comments ({post.Comments.length})</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <List component="div" sx={{ pl: '10%' }}>
-                            {
-                                post.Comments.map(c => <><Divider light /><ListItemText primary={c} /></>)
-                            }
-                        </List>
-                    </AccordionDetails>
-                </Accordion>
+            <Accordion sx={{ width: '95%', md: 2, pl: 5, border: 0, borderLeft: 3 }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography sx={{ fontWeight: 'bold' }}>Comments ({post.Comments.length})</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Box sx={{ pl: 3, border: 0, borderLeft: 1 }}>
+                                {
+                                    post.Comments.map(c => <CommentItem key={c.id} comment={c} />)
+                                }
+                            </Box>
+                        </AccordionDetails>
+                    </Accordion>
             </>
         </Paper>
     );
