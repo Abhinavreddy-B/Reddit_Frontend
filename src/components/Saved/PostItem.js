@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Divider, List, ListItem, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, ListItem, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import { Box } from '@mui/system';
 import { ExpandMore } from '@mui/icons-material';

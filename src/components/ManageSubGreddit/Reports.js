@@ -60,7 +60,7 @@ const Row = ({ report, Ignore, Block, DeleteReport }) => {
   // }
 
   const AbortBlock = () => {
-    console.log("Aborting")
+    // console.log("Aborting")
     clearTimeout(intervalRef.current);
     setTimer(undefined)
     Notify({
@@ -116,7 +116,7 @@ const Reports = () => {
   }
 
   const HandleBlock = async (id) => {
-    console.log("Blocking")
+    // console.log("Blocking")
     try {
       await ServerMethods.BlockReport(id)
       // setReports(reports.map(f => f.id === id? {...f,Ignored: true} : f))
@@ -136,7 +136,7 @@ const Reports = () => {
   const HandleDelete = async (id, PostId) => {
     try {
       await ServerMethods.DeleteReport(id)
-      console.log(PostId)
+      // console.log(PostId)
       setReports(reports.filter(f => f.Post.id !== PostId))
       Notify({
         type: 'success',

@@ -101,9 +101,9 @@ const DeleteSubGreddit = async (id) => {
 }
 
 const GetAllTags = async () => {
-    console.log("Here")
+    // console.log("Here")
     const res = await axios.get(`${BaseUrl}/api/subgreddit/tags`, config())
-    console.log("Returning")
+    // console.log("Returning")
     return res.data
 }
 
@@ -259,7 +259,7 @@ const GetReporedVsDeleted = async (id) => {
 }
 
 const PostCommentReply = async (id,Reply) => {
-    console.log("inside post")
+    // console.log("inside post")
     const res = await axios.post(`${BaseUrl}/api/comment/${id}/comment`,{commentReply: Reply},config())
     return res.data
 }

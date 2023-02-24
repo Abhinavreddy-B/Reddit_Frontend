@@ -35,9 +35,7 @@ function App() {
     const saved = JSON.parse(window.localStorage.getItem('Greddit:token'))
     
     if (saved) {
-      console.log("Entered")
       ServerMethods.verifyToken(`Bearer ${saved.token}`).then(() => {
-        console.log("Hi")
         setUser(saved)
         ServerMethods.setToken(saved)
         setDeciting(false)
