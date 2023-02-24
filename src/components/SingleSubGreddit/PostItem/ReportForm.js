@@ -16,13 +16,13 @@ const ReportForm = ({ setReportBox, PostId }) => {
     const { Notify } = useContext(NotifyContext)
 
     const HandleSubmit = async (event) => {
-        console.log(document.getElementById('Report-Form'))
+        // console.log(document.getElementById('Report-Form'))
         event.preventDefault();
         setPinging(true)
-        console.log(document.querySelectorAll('#Report-Form'))
+        // console.log(document.querySelectorAll('#Report-Form'))
         const val = document.getElementById('Report-Form').value;
         try {
-            console.log(val)
+            // console.log(val)
             await ServerMethods.PostReport(val, PostId)
             Notify({
                 type: 'success',

@@ -34,7 +34,6 @@ const Chat = () => {
     }, [user, OtherId])
 
     const handleNewMessage = () => {
-        console.log(document.querySelector('#newmessage-input'))
         if(document.querySelector('#newmessage-input').value==='' || document.querySelector('#newmessage-input').value===undefined || document.querySelector('#newmessage-input').value===null){
             return ;
         }

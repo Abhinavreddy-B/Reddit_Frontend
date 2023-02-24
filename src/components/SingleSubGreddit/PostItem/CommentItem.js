@@ -28,7 +28,7 @@ const CommentItem = ({ comment }) => {
         } else {
             setOpen(true)
             ServerMethods.GetCommentReplies(comment.id).then(res => {
-                console.log(res)
+                // console.log(res)
                 setChildren(res)
             })
         }

@@ -47,7 +47,7 @@ const MySubGreddits = () => {
             setUserSubGredits(response)
         })
         ServerMethods.GetAllTags().then((response) => {
-            console.log("Hey", response)
+            // console.log("Hey", response)
             setTags(response.map(e => { return { Tag: e, selected: false } }))
         }).catch((e) => {
             console.log(e)
@@ -69,7 +69,7 @@ const MySubGreddits = () => {
             fuzzy,
             page: 1,
         }).then(res => {
-            console.log(res)
+            // console.log(res)
             setNoOfPages(res.totalPages)
             setData(res.items)
             setPinging(false)
@@ -90,7 +90,7 @@ const MySubGreddits = () => {
             fuzzy: FuzzyRef.current,
             page: Page,
         }).then(res => {
-            console.log(res)
+            // console.log(res)
             setNoOfPages(res.totalPages)
             setData(DataRef.current.concat(res.items))
             setLoadingNew(false)
@@ -108,11 +108,11 @@ const MySubGreddits = () => {
             }
             const windowHeight = document.body.scrollHeight-document.body.clientHeight
             const scrolledDistance = window.scrollY
-            console.log(document.body.scrollHeight-document.body.clientHeight,window.scrollY)
+            // console.log(document.body.scrollHeight-document.body.clientHeight,window.scrollY)
             if (windowHeight - scrolledDistance < 1 && LoadingNewRef.current !== true) {
                 if(PageRef.current < NoOfPages){
                     setPage(PageRef.current + 1)
-                    console.log("Scrolling")
+                    // console.log("Scrolling")
                 }
             }
         }

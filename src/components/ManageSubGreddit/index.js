@@ -13,7 +13,7 @@ import Stats from './Stats';
 const ManageSubGreddit = () => {
     const [page, setPage] = useState('Users')
     document.onkeydown = function (e) {
-        console.log(e.which) // U-85,j-74,S-83,R-82
+        // console.log(e.which) // U-85,j-74,S-83,R-82
         if(e.which === 85){
             setPage('Users')
         }else if(e.which === 74){
